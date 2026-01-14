@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"D:\\VoidAngler\\VoidAngler_v00\\Source\\VoidAngler_v00\\VoidAngler_v00.Build.cs",
+		"D:\\VoidAngler\\VoidAngler_v00\\Source\\VoidAngler_v00.Target.cs",
+		"D:\\VoidAngler\\VoidAngler_v00\\Source\\VoidAngler_v00Editor.Target.cs"
+	],
+	"EngineVersion": "5.5.4"
+}

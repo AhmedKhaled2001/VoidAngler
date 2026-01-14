@@ -1,0 +1,32 @@
+{
+	"version": 1,
+	"changelists": [
+		{
+			"guid": "00000000000000000000000000000000",
+			"description": "Default Uncontrolled Changelist",
+			"files": [
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/Level_00.umap",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/Character/BP_PlayerCharacter.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/GameBackend/BP_VoidAnglerGameMode.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/Character/BP_VoidPlayerController.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/Traversal/BP_AnchorPoint.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/SM_BoardPH.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/SM_PlayerCharacterPH.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/UI/WBP_Crosshair.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/Box_15BF8322.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/Box_5779D12E.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/WorldGeneration/BP_WorldChunk.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/WorldGeneration/BP_ChunkManager.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/Level_01.umap",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/Chunk_F_01.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/BP_EnemyBase.uasset",
+				"D:/UE_5.5/Engine/Content/BasicShapes/Cone.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/BoardPH_SM.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Levels/_GENERATED/CompuCity/Boas.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/x.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/Blueprints/BP_AnchorPoint.uasset",
+				"D:/VoidAngler/VoidAngler_v00/Content/BP_PlayerCharacter.uasset"
+			]
+		}
+	]
+}

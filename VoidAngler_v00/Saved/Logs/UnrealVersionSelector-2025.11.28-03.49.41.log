@@ -1,0 +1,25 @@
+Log started at 11/28/2025 03:49:41 (2025-11-28T01:49:41Z)
+No config file at C:\ProgramData\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Compu City\AppData\Local\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+No config file at C:\Users\Compu City\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Configuration will be read from:
+  C:\Users\Compu City\AppData\Roaming\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+Log file: D:\VoidAngler\VoidAngler_v00\Saved\Logs\UnrealVersionSelector-2025.11.28-03.49.41.log
+
+Setting temp directory to 'C:\Users\Compu City\AppData\Local\Temp\UnrealBuildTool\5776fc56'
+    Registering build platform: UnrealBuildTool.AndroidPlatformFactory
+    Registering build platform: UnrealBuildTool.IOSPlatformFactory
+    Registering build platform: UnrealBuildTool.LinuxPlatformFactory
+    Registering build platform: UnrealBuildTool.MacPlatformFactory
+    Registering build platform: UnrealBuildTool.TVOSPlatformFactory
+    Registering build platform: UnrealBuildTool.WindowsPlatformFactory
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (1)
+Found Windows 10 SDK root at C:\Program Files (x86)\Windows Kits\10 (2)
+Found Windows 10 SDK version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Found Universal CRT version 10.0.26100.0 at C:\Program Files (x86)\Windows Kits\10
+Win64 Installed SDK(s): MinVersion_Sdk=10.0.19041.0, MaxVersion_Sdk=10.9.99999.0, CurrentVersion_Sdk=10.0.26100.0, Version_AutoSdk=10.0.22621.0, CurrentVersion_AutoSdk=
+        Registering build platform: Win64 - buildable: True
+    Registering build platform: UnrealBuildTool.VisionOSPlatformFactory
+Log file: C:\Users\Compu City\AppData\Local\UnrealBuildTool\Log_GPF.txt
+Deleting old log file: C:\Users\Compu City\AppData\Local\UnrealBuildTool\Log_GPF-backup-2025.05.16-04.26.25.txt
+Resolved project argument D:/VoidAngler/VoidAngler_v00/VoidAngler_v00.uproject to D:\VoidAngler\VoidAngler_v00\VoidAngler_v00.uproject

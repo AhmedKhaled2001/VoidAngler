@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <None Include="..\..\VoidAngler_v00.uproject" />
+    <Filter Include="Source">
+      <UniqueIdentifier>{F31BBDD1-B3E8-3BCC-9652-680E16935819}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\VoidAngler_v00.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\Source\VoidAngler_v00Editor.Target.cs">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="..\..\.vsconfig" />
+    <None Include="..\..\VoidAngler_v00.sln.DotSettings.user" />
+    <Filter Include="Config">
+      <UniqueIdentifier>{FA535FFB-25E1-3D20-B416-52F9BE21E06E}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Config\DefaultEditor.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultEngine.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultGame.ini">
+      <Filter>Config</Filter>
+    </None>
+    <None Include="..\..\Config\DefaultInput.ini">
+      <Filter>Config</Filter>
+    </None>
+    <Filter Include="Source\VoidAngler_v00">
+      <UniqueIdentifier>{C90D1D38-3AA5-3EC9-895D-AD102B58DFA0}</UniqueIdentifier>
+    </Filter>
+    <None Include="..\..\Source\VoidAngler_v00\VoidAngler_v00.Build.cs">
+      <Filter>Source\VoidAngler_v00</Filter>
+    </None>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\VoidAngler_v00.cpp">
+      <Filter>Source\VoidAngler_v00</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\VoidAngler_v00.h">
+      <Filter>Source\VoidAngler_v00</Filter>
+    </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\Character">
+      <UniqueIdentifier>{431FD0D4-0699-3A6C-86B0-313A66B6F15D}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\PlayerCharacter.cpp">
+      <Filter>Source\VoidAngler_v00\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\PlayerCharacter.h">
+      <Filter>Source\VoidAngler_v00\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\VoidPlayerController.cpp">
+      <Filter>Source\VoidAngler_v00\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\VoidPlayerController.h">
+      <Filter>Source\VoidAngler_v00\Character</Filter>
+    </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\Character\Components">
+      <UniqueIdentifier>{241FBB2C-9237-3722-83E5-EE2F80081984}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\BoardComponent.cpp">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\BoardComponent.h">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\TetherComponent.cpp">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\TetherComponent.h">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\GameBackend">
+      <UniqueIdentifier>{1FA83557-D134-3ECF-8CF6-99692041D615}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\VoidAnglerGameMode.cpp">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\VoidAnglerGameMode.h">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\Traversal">
+      <UniqueIdentifier>{5B55037A-9CCF-382C-BB22-73695D857805}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Traversal\AnchorPoint.cpp">
+      <Filter>Source\VoidAngler_v00\Traversal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Traversal\AnchorPoint.h">
+      <Filter>Source\VoidAngler_v00\Traversal</Filter>
+    </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\WorldGeneration">
+      <UniqueIdentifier>{541C8A7F-E9C1-344A-81AB-7E7BA3A33859}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\ChunkManager.cpp">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\ChunkManager.h">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\WorldChunk.cpp">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\WorldChunk.h">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
