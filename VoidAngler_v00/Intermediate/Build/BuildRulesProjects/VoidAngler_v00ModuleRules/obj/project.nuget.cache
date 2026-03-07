@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Zejx3Hva3VU=",
+  "dgSpecHash": "V6NJZi2sl4k=",
   "success": true,
-  "projectFilePath": "D:\\VoidAngler\\VoidAngler_v00\\Intermediate\\Build\\BuildRulesProjects\\VoidAngler_v00ModuleRules\\VoidAngler_v00ModuleRules.csproj",
+  "projectFilePath": "D:\\VoidAngler_RR\\VoidAngler\\VoidAngler_v00\\Intermediate\\Build\\BuildRulesProjects\\VoidAngler_v00ModuleRules\\VoidAngler_v00ModuleRules.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Compu City\\.nuget\\packages\\bitfaster.caching\\2.4.1\\bitfaster.caching.2.4.1.nupkg.sha512",
     "C:\\Users\\Compu City\\.nuget\\packages\\blake3\\1.1.0\\blake3.1.1.0.nupkg.sha512",

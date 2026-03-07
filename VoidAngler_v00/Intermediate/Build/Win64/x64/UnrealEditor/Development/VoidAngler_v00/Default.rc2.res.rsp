@@ -83,5 +83,5 @@
 /DBUILD_ICON_FILE_NAME="\"..\\Build\\Windows\\Resources\\Default.ico\""
 /DPROJECT_COPYRIGHT_STRING="Fill out your copyright notice in the Description page of Project Settings."
 /DPROJECT_PRODUCT_IDENTIFIER=VoidAngler_v00
-/fo "D:\VoidAngler\VoidAngler_v00\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoidAngler_v00\Default.rc2.res"
+/fo "D:\VoidAngler_RR\VoidAngler\VoidAngler_v00\Intermediate\Build\Win64\x64\UnrealEditor\Development\VoidAngler_v00\Default.rc2.res"
 "..\Build\Windows\Resources\Default.rc2"

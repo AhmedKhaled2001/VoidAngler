@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VoidAngler_v00ModuleRules")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Development")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+176ed0234dded0ffeba8e2ee3a1e28c653a434fb")]
 [assembly: System.Reflection.AssemblyProductAttribute("VoidAngler_v00ModuleRules")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VoidAngler_v00ModuleRules")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

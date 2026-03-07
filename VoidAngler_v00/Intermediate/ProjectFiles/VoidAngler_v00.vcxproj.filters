@@ -70,6 +70,15 @@
     <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\TetherComponent.h">
       <Filter>Source\VoidAngler_v00\Character\Components</Filter>
     </ClCompile>
+    <Filter Include="Source\VoidAngler_v00\Enemy">
+      <UniqueIdentifier>{C7A3FE8B-8966-35A6-958E-184AB3D280E0}</UniqueIdentifier>
+    </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyBase.cpp">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyBase.h">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
     <Filter Include="Source\VoidAngler_v00\GameBackend">
       <UniqueIdentifier>{1FA83557-D134-3ECF-8CF6-99692041D615}</UniqueIdentifier>
     </Filter>
