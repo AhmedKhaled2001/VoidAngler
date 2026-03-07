@@ -72,8 +72,8 @@ void APlayerCharacter::Edge(float Value)
 	}
 }
 
-void APlayerCharacter::Reel(float Value)
-{ 
+void APlayerCharacter::Winch(float Value)
+{
 	if (TetherComponent)
 	{
 		TetherComponent->SetReelInput(Value);
@@ -99,11 +99,18 @@ void APlayerCharacter::Brake()
 void APlayerCharacter::FireTether()
 {
 	// To be continued
-
+	if (!TetherComponent) return;
+	if (TetherComponent->CurrentTetherState != ETetherState::Inactive)
+	{
+		TetherComponent->EvaluateRhythmInput();
+		TetherComponent->DetachTether();
+		return;
+	}
 	if (CurrentTargetActor)
 	{
 		// We hit something valid!
 		// For now, we grab the location. Later we will pass the Actor pointer for moving targets.
+		TetherComponent->EvaluateRhythmInput();
 		TetherComponent->SetTetherTargetLocation(CurrentTargetActor ,CurrentTargetActor->GetActorLocation());
 	}
 	else
@@ -282,7 +289,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		PlayerInputComponent->BindAxis("Turn", this, &APlayerCharacter::Turn);
 		PlayerInputComponent->BindAxis("LookUp", this, &APlayerCharacter::LookUp);
 		//PlayerInputComponent->BindAxis("Edge", this, &APlayerCharacter::Edge);
-		PlayerInputComponent->BindAxis("Reel", this, &APlayerCharacter::Reel);
+		PlayerInputComponent->BindAxis("Reel", this, &APlayerCharacter::Winch);
 		PlayerInputComponent->BindAction("Brake", IE_Pressed,this, &APlayerCharacter::Brake);
 		PlayerInputComponent->BindAction("Brake",IE_Released, this, &APlayerCharacter::BrakeReleased);
 		

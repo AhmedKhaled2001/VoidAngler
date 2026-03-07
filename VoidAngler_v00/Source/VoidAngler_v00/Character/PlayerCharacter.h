@@ -32,7 +32,7 @@ protected:
 	float KillZThreshold = -5000.0f;
 
 	void Edge(float Value);
-	void Reel(float Value);
+	void Winch(float Value);
 	void Brake();
 	void BrakeReleased();
 private:
