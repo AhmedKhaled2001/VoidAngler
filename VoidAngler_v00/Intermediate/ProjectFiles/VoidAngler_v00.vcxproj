@@ -67,7 +67,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{420D928E-7134-3C59-AB19-131A6F9C8741}</ProjectGuid>
+    <ProjectGuid>{CF7F90BB-9EA9-31E2-8E5B-AC160018CD4E}</ProjectGuid>
     <RootNamespace>VoidAngler_v00</RootNamespace>
   </PropertyGroup>
   <Import Project="UECommon.props" />

@@ -31,6 +31,12 @@ protected:
 	class UArrowComponent* EntryPoint;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level Design")
 	class USplineComponent* PathSpline;
+	// Beast Movement Fields
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Design|Beast Constraints")
+	float AllowedMinWeave = 500.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Design|Beast Constraints")
+	float AllowedMaxWeave = 2000.0f;
+	
 	UPROPERTY()
 	AChunkManager* MyManager;
 	// Handling Overlap Event Triggers

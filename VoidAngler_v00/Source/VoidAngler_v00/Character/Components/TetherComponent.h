@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "TetherComponent.generated.h"
 
+class AOceanManager;
+
 UENUM(BlueprintType)
 enum class ETetherState : uint8
 {
@@ -45,14 +47,16 @@ public:
 
 protected:
     virtual void BeginPlay() override;
-
+    UPROPERTY()
+    AOceanManager* OceanManager;
     UPROPERTY()
     AActor* AttachedActor = nullptr;
     UPROPERTY(VisibleAnywhere, Category="Tether|State")
     bool bIsTetherActive = false;
     UPROPERTY(VisibleAnywhere, Category="Tether|State")
     FVector TetherTargetLocation = FVector::ZeroVector;
-    
+    UPROPERTY(EditAnywhere, Category = "Aerodynamics")
+    float ForwardDragCoefficient = 0.0005f;
     float CurrentTetherLength = 0.0f;
     
     UPROPERTY()

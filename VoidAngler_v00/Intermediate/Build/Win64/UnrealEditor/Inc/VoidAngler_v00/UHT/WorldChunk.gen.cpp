@@ -151,6 +151,20 @@ struct Z_Construct_UClass_AWorldChunk_Statics
 		{ "EditInline", "true" },
 		{ "ModuleRelativePath", "WorldGeneration/WorldChunk.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AllowedMinWeave_MetaData[] = {
+		{ "Category", "Level Design|Beast Constraints" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// Beast Movement Fields\n" },
+#endif
+		{ "ModuleRelativePath", "WorldGeneration/WorldChunk.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "Beast Movement Fields" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AllowedMaxWeave_MetaData[] = {
+		{ "Category", "Level Design|Beast Constraints" },
+		{ "ModuleRelativePath", "WorldGeneration/WorldChunk.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MyManager_MetaData[] = {
 		{ "ModuleRelativePath", "WorldGeneration/WorldChunk.h" },
 	};
@@ -160,6 +174,8 @@ struct Z_Construct_UClass_AWorldChunk_Statics
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_ObstacleVolume;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_EntryPoint;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_PathSpline;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_AllowedMinWeave;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_AllowedMaxWeave;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_MyManager;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
@@ -177,6 +193,8 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AWorldChunk_St
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_ObstacleVolume = { "ObstacleVolume", nullptr, (EPropertyFlags)0x00200800000a0009, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, ObstacleVolume), Z_Construct_UClass_UBoxComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ObstacleVolume_MetaData), NewProp_ObstacleVolume_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_EntryPoint = { "EntryPoint", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, EntryPoint), Z_Construct_UClass_UArrowComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EntryPoint_MetaData), NewProp_EntryPoint_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_PathSpline = { "PathSpline", nullptr, (EPropertyFlags)0x00200800000a001d, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, PathSpline), Z_Construct_UClass_USplineComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PathSpline_MetaData), NewProp_PathSpline_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_AllowedMinWeave = { "AllowedMinWeave", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, AllowedMinWeave), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AllowedMinWeave_MetaData), NewProp_AllowedMinWeave_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_AllowedMaxWeave = { "AllowedMaxWeave", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, AllowedMaxWeave), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AllowedMaxWeave_MetaData), NewProp_AllowedMaxWeave_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AWorldChunk_Statics::NewProp_MyManager = { "MyManager", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AWorldChunk, MyManager), Z_Construct_UClass_AChunkManager_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MyManager_MetaData), NewProp_MyManager_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AWorldChunk_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_ExitPoint,
@@ -184,6 +202,8 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AWorldChu
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_ObstacleVolume,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_EntryPoint,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_PathSpline,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_AllowedMinWeave,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_AllowedMaxWeave,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AWorldChunk_Statics::NewProp_MyManager,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AWorldChunk_Statics::PropPointers) < 2048);
@@ -227,10 +247,10 @@ AWorldChunk::~AWorldChunk() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_WorldChunk_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AWorldChunk, AWorldChunk::StaticClass, TEXT("AWorldChunk"), &Z_Registration_Info_UClass_AWorldChunk, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AWorldChunk), 2991524576U) },
+		{ Z_Construct_UClass_AWorldChunk, AWorldChunk::StaticClass, TEXT("AWorldChunk"), &Z_Registration_Info_UClass_AWorldChunk, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AWorldChunk), 3964399170U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_WorldChunk_h_713603919(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_WorldChunk_h_346050658(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_WorldChunk_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_WorldChunk_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

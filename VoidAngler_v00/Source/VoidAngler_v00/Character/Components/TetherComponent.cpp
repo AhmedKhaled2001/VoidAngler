@@ -6,6 +6,8 @@
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "VoidAngler_v00/WorldGeneration/OceanManager.h"
 
 // Sets default values for this component's properties
 UTetherComponent::UTetherComponent()
@@ -20,6 +22,15 @@ void UTetherComponent::BeginPlay()
     Super::BeginPlay();
     SetComponentTickEnabled(true);
     RegisterComponent();
+    AActor* FoundOcean = UGameplayStatics::GetActorOfClass(GetWorld(), AOceanManager::StaticClass());
+    if (FoundOcean)
+    {
+        OceanManager = Cast<AOceanManager>(FoundOcean);
+    }
+    else
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("OCEAN MANAGER NOT FOUND!"));
+    }
 }
 
 void UTetherComponent::Initalize(UPrimitiveComponent* InPhysicsRoot)
@@ -175,29 +186,34 @@ void UTetherComponent::ApplySuspension()
 
     FVector BoardLoc = PhysicsRoot->GetComponentLocation();
     FRotator BoardRot = PhysicsRoot->GetComponentRotation();
-    FVector DownDir = -FVector::UpVector;
-    
+    float CurrentTime = GetWorld()->GetTimeSeconds();
     for (const FVector& LocalOffset : Offsets)
     {
-       FVector LegStart = BoardLoc + BoardRot.RotateVector(LocalOffset);
-       FVector LegEnd = LegStart + (DownDir * TraceDist);
+        FVector LegStart = BoardLoc + BoardRot.RotateVector(LocalOffset);
+        float WaterZ = 0.0f; 
+        if (OceanManager)
+        {
+            WaterZ = OceanManager->GetWaterHeightAt(FVector2D(LegStart.X, LegStart.Y), CurrentTime);
+        }
+        float DistanceToWater = LegStart.Z - WaterZ;
+        //FVector LegEnd = LegStart + (DownDir * TraceDist);
 
-       FHitResult Hit;
-       FCollisionQueryParams Params;
-       Params.AddIgnoredActor(PhysicsRoot->GetOwner());
 
-       if (GetWorld()->LineTraceSingleByChannel(Hit, LegStart, LegEnd, ECC_Visibility, Params))
-       {
-          float Distance = Hit.Distance;
-          float Compression = FMath::Max(1.0f - (Distance / HoverHeight), 0.0f);
-          FVector SpringForce = FVector::UpVector * Compression * ForcePerLeg;
+        if (DistanceToWater < TraceDist) 
+        {
+            // If submerged (negative distance), Compression becomes > 1.0. 
+            // This naturally acts as massive buoyancy, pushing the board back to the surface!
+            float Compression = FMath::Max(1.0f - (DistanceToWater / HoverHeight), 0.0f);
+            FVector SpringForce = FVector::UpVector * Compression * ForcePerLeg;
 
-          FVector PointVel = PhysicsRoot->GetPhysicsLinearVelocityAtPoint(LegStart);
-          float VerticalSpeed = PointVel.Z;
-          FVector DampingForce = FVector::UpVector * -VerticalSpeed * DampingPerLeg;
+            // Your existing perfect damping math
+            FVector PointVel = PhysicsRoot->GetPhysicsLinearVelocityAtPoint(LegStart);
+            float VerticalSpeed = PointVel.Z;
+            FVector DampingForce = FVector::UpVector * -VerticalSpeed * DampingPerLeg;
 
-          PhysicsRoot->AddForceAtLocation(SpringForce + DampingForce, LegStart);
-       }
+            // Push the board up!
+            PhysicsRoot->AddForceAtLocation(SpringForce + DampingForce, LegStart);
+        }
     }
 }
 
@@ -205,22 +221,61 @@ void UTetherComponent::ApplyAerodynamics()
 {
     FVector Velocity = PhysicsRoot->GetComponentVelocity();
     float Speed = Velocity.Size2D();
-    FVector VelDir = Velocity.GetSafeNormal();
-    FVector BoardForward = PhysicsRoot->GetForwardVector();
+    float DeltaTime = FMath::Max(GetWorld()->GetDeltaSeconds(), 0.001f);
+    float Mass = PhysicsRoot->GetMass();
+    // --- THE JITTER FIX ---
+    // We create perfectly flat 2D vectors. By forcing Z to 0.0f, your aerodynamic forces 
+    // are physically incapable of lifting the board or fighting the suspension!
+    FVector VelDir2D = FVector(Velocity.X, Velocity.Y, 0.0f).GetSafeNormal();
+    
+    FVector BoardSide3D = PhysicsRoot->GetForwardVector();
+    FVector BoardSide2D = FVector(BoardSide3D.X, BoardSide3D.Y, 0.0f).GetSafeNormal();
+
+    if (Speed > 100.0f) 
+    {
+        float DragMagnitude = (Speed * Speed) * ForwardDragCoefficient;
+        // Drag only applies strictly backwards on the X/Y plane
+        FVector ForwardDragForce = -VelDir2D * DragMagnitude;
+        PhysicsRoot->AddForce(ForwardDragForce);
+    }
     
     if (bIsBraking)
     {
-       FVector BrakeForce = -VelDir * Speed * AirbrakeDrag;
-       PhysicsRoot->AddForce(BrakeForce);
-       FVector TorqueAxis = FVector::CrossProduct(BoardForward, VelDir);
-       PhysicsRoot->AddTorqueInRadians(TorqueAxis * AirbrakeTurnSpeed * AirbrakeAngleForce, NAME_None, true);
-       PhysicsRoot->SetAngularDamping(5.0f);
+        FVector BrakeForce = -VelDir2D * Speed * AirbrakeDrag;
+        PhysicsRoot->AddForce(BrakeForce);
+       
+        // We keep the 3D vectors ONLY for the braking torque, because torque doesn't lift the board!
+        FVector VelDir3D = Velocity.GetSafeNormal();
+        FVector TorqueAxis = FVector::CrossProduct(BoardSide3D, VelDir3D);
+        PhysicsRoot->AddTorqueInRadians(TorqueAxis * AirbrakeTurnSpeed * AirbrakeAngleForce, NAME_None, true);
     }
     else if (Speed > MinSpeedForKeelDrag)
     {
-       float DriftFactor = FVector::DotProduct(VelDir, BoardForward);
-       FVector KeelForce = -BoardForward * DriftFactor * Speed * KeelDrag;
-       PhysicsRoot->AddForce(KeelForce);
+        // 1. THE PERFECT ANTI-DRIFT (Grip Percentage Logic)
+        // Calculate exactly how fast we are sliding sideways along the 2D plane
+        float LateralSpeed = FVector::DotProduct(Velocity, BoardSide2D);
+       
+        // This is the EXACT force required to stop the drift in one frame.
+        // Because it includes Mass and DeltaTime, it is frame-rate independent.
+        FVector PerfectStoppingForce = (-BoardSide2D * LateralSpeed * Mass) / DeltaTime;
+       
+        // KeelDrag is now your "Grip %" (e.g., 0.1 = 10% Grip)
+        float GripPercentage = FMath::Clamp(KeelDrag, 0.0f, 1.0f); 
+        FVector AntiDriftForce = PerfectStoppingForce * GripPercentage;
+       
+        // 2. THE ACTIVE CARVE (Centripetal Force)
+        // We use the 3D lean (Z) to determine how much the edge "bites" the water.
+        float EdgeBite = BoardSide3D.Z; 
+       
+        // We scale this force with Speed and Mass so it feels heavy and powerful at Mach 2.
+        // Increasing CarveMultiplier makes the turn sharper.
+        float CarveMultiplier = 2.0f; 
+        FVector ActiveCarveForce = BoardSide2D * -EdgeBite * Speed * (GripPercentage * CarveMultiplier * Mass);
+       
+        // Apply the combined flat 2D forces. 
+        // This is the "Holy Grail": Stable momentum-based grip that can't jitter, 
+        // isolated to the 2D plane so it can't fight the suspension.
+        PhysicsRoot->AddForce(AntiDriftForce + ActiveCarveForce);
     }
 }
 

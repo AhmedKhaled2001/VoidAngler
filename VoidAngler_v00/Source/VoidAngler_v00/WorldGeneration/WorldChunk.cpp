@@ -85,7 +85,7 @@ void AWorldChunk::OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		if (Beast && PathSpline)
 		{
 			// Handoff: "Here is your new rail."
-			Beast->SetCurrentSpline(PathSpline);
+			Beast->SetCurrentSpline(PathSpline, AllowedMinWeave , AllowedMaxWeave);
 		}
 		// 3. Disable Trigger (One-shot)
 		bEnemyRecievedSpline = true;

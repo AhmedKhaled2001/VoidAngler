@@ -9,13 +9,14 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class USplineComponent;
 #ifdef VOIDANGLER_V00_EnemyBase_generated_h
 #error "EnemyBase.generated.h already included, missing '#pragma once' in EnemyBase.h"
 #endif
 #define VOIDANGLER_V00_EnemyBase_generated_h
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Enemy_EnemyBase_h_12_RPC_WRAPPERS_NO_PURE_DECLS \
-	DECLARE_FUNCTION(execGetStaminaRatio);
+	DECLARE_FUNCTION(execSetCurrentSpline);
 
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Enemy_EnemyBase_h_12_INCLASS_NO_PURE_DECLS \

@@ -22,7 +22,6 @@ AEnemyBase::AEnemyBase()
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-	CurrentStamina = MaxStamina;
 	float ClosestDist = 99999.0f;
 	USplineComponent* BestSpline = nullptr;
 
@@ -43,7 +42,7 @@ void AEnemyBase::BeginPlay()
 
 	if (BestSpline)
 	{
-		SetCurrentSpline(BestSpline);
+		SetCurrentSpline(BestSpline ,0 ,0 );
 	}
 }
 
@@ -71,35 +70,8 @@ void AEnemyBase::Tick(float DeltaTime)
 	SetActorLocationAndRotation(NewLoc, NewRot);
 }
 
-void AEnemyBase::ApplyTetherDrag(float TensionAmount, float DeltaTime)
-{
-	if (TensionAmount > DragThreshold)
-	{
-		// 1. Calculate Over-Tension (The "Burn")
-		float DragIntensity = TensionAmount - DragThreshold;
-        
-		// 2. Damage Calculation
-		// Tuning: 0.1f ensures we don't kill it instantly. 
-		// Higher Drag = Faster Drain.
-		float Damage = DragIntensity * DeltaTime * 0.1f; 
-        
-		CurrentStamina -= Damage;
-        
-		// 3. Win State Check
-		if (CurrentStamina <= 0.0f)
-		{
-			CurrentStamina = 0.0f;
-			// TODO: Trigger "Catch" event / Ragdoll / Explosion
-			UE_LOG(LogTemp, Warning, TEXT("BEAST CAUGHT!"));
-		}
-        
-		// Debug Feedback
-		// Only log periodically or draw string to avoid console spam
-		// GEngine->AddOnScreenDebugMessage(1, 0.0f, FColor::Red, FString::Printf(TEXT("Stamina: %f"), CurrentStamina));
-	}
-}
 
-void AEnemyBase::SetCurrentSpline(USplineComponent* Spline)
+void AEnemyBase::SetCurrentSpline(USplineComponent* Spline, float ChunkMinWeave, float ChunkMaxWeave)
 {
 	 DistanceAlongSpline = 0.0f;
 	 CurrentTrack = Spline;

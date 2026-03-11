@@ -18,32 +18,49 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// Setup
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
-	
-	UPROPERTY(EditAnywhere, Category = "Stats")
-	float MaxStamina = 1000.0f;
-	float CurrentStamina;
-	// The Resistance Check:
-	// How hard must the tether pull before the beast starts losing energy?
-	// If PullForce < DragThreshold, no damage is dealt (the line spools out freely).
-	UPROPERTY(EditAnywhere, Category = "Stats")
-	float DragThreshold = 500.0f;
-	UPROPERTY(EditAnywhere, Category = "Stats")
-	float BaseSpeed = 3000.0f; // Fast enough to be a challenge
-	// [T3.2] Movement State
+
+	// --- LOCOMOTION (RUBBER-BANDING) ---
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float BaseSpeed = 3000.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float MaxFleeSpeed = 6000.0f; 
+    
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float MinTauntSpeed = 500.0f; 
+
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float DistanceToTriggerFlee = 3000.0f; 
+    
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float DistanceToTriggerTaunt = 10000.0f; 
+
+	// --- ORGANIC WEAVE ---
+	UPROPERTY(EditAnywhere, Category = "Leviathan|Locomotion")
+	float WeaveSpeed = 2.0f; 
+
+	// These will be overwritten by the WorldChunk's limits
+	float MinWeaveAmplitude = 500.0f; 
+	float MaxWeaveAmplitude = 2000.0f; 
+
+	// Internal Math Tracking
+	float RunningTime = 0.0f;
+	float CurrentWeaveAmplitude = 0.0f; 
+	float TargetWeaveAmplitude = 0.0f;
+
+	// Spline Information 
 	float DistanceAlongSpline = 0.0f;
-	// The Rail we are currently riding
 	UPROPERTY()
 	class USplineComponent* CurrentTrack;
-	// Helper to find the next track piece
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void ApplyTetherDrag(float TensionAmount, float DeltaTime);
 	UFUNCTION(BlueprintCallable, Category = "Stats")
-	float GetStaminaRatio() const { return CurrentStamina / MaxStamina; }
-	void SetCurrentSpline (USplineComponent* Spline);
+	void SetCurrentSpline (USplineComponent* Spline ,float ChunkMinWeave, float ChunkMaxWeave);
 	
 };

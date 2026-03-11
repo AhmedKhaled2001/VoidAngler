@@ -15,6 +15,7 @@ ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 ENGINE_API UClass* Z_Construct_UClass_UActorComponent();
 ENGINE_API UClass* Z_Construct_UClass_UPrimitiveComponent_NoRegister();
 UPackage* Z_Construct_UPackage__Script_VoidAngler_v00();
+VOIDANGLER_V00_API UClass* Z_Construct_UClass_AOceanManager_NoRegister();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_UTetherComponent();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_UTetherComponent_NoRegister();
 VOIDANGLER_V00_API UEnum* Z_Construct_UEnum_VoidAngler_v00_ETetherState();
@@ -98,6 +99,9 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 		{ "Category", "Tether|State" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_OceanManager_MetaData[] = {
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AttachedActor_MetaData[] = {
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
@@ -107,6 +111,10 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TetherTargetLocation_MetaData[] = {
 		{ "Category", "Tether|State" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ForwardDragCoefficient_MetaData[] = {
+		{ "Category", "Aerodynamics" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PhysicsRoot_MetaData[] = {
@@ -294,10 +302,12 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentTetherState_Underlying;
 	static const UECodeGen_Private::FEnumPropertyParams NewProp_CurrentTetherState;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_OceanManager;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_AttachedActor;
 	static void NewProp_bIsTetherActive_SetBit(void* Obj);
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsTetherActive;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_TetherTargetLocation;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_ForwardDragCoefficient;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_PhysicsRoot;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_HoverHeight;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_HoverForce;
@@ -345,6 +355,7 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 };
 const UECodeGen_Private::FBytePropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState_Underlying = { "UnderlyingType", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Byte, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, nullptr, METADATA_PARAMS(0, nullptr) };
 const UECodeGen_Private::FEnumPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState = { "CurrentTetherState", nullptr, (EPropertyFlags)0x0010000000020015, UECodeGen_Private::EPropertyGenFlags::Enum, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, CurrentTetherState), Z_Construct_UEnum_VoidAngler_v00_ETetherState, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentTetherState_MetaData), NewProp_CurrentTetherState_MetaData) }; // 2374149683
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_OceanManager = { "OceanManager", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, OceanManager), Z_Construct_UClass_AOceanManager_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OceanManager_MetaData), NewProp_OceanManager_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_AttachedActor = { "AttachedActor", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, AttachedActor), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AttachedActor_MetaData), NewProp_AttachedActor_MetaData) };
 void Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive_SetBit(void* Obj)
 {
@@ -352,6 +363,7 @@ void Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive_SetBit
 }
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive = { "bIsTetherActive", nullptr, (EPropertyFlags)0x0020080000020001, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(UTetherComponent), &Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsTetherActive_MetaData), NewProp_bIsTetherActive_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherTargetLocation = { "TetherTargetLocation", nullptr, (EPropertyFlags)0x0020080000020001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TetherTargetLocation), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TetherTargetLocation_MetaData), NewProp_TetherTargetLocation_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForwardDragCoefficient = { "ForwardDragCoefficient", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ForwardDragCoefficient), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ForwardDragCoefficient_MetaData), NewProp_ForwardDragCoefficient_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_PhysicsRoot = { "PhysicsRoot", nullptr, (EPropertyFlags)0x0020080000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, PhysicsRoot), Z_Construct_UClass_UPrimitiveComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhysicsRoot_MetaData), NewProp_PhysicsRoot_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverHeight = { "HoverHeight", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, HoverHeight), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HoverHeight_MetaData), NewProp_HoverHeight_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverForce = { "HoverForce", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, HoverForce), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HoverForce_MetaData), NewProp_HoverForce_MetaData) };
@@ -393,9 +405,11 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponen
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UTetherComponent_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState_Underlying,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_OceanManager,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_AttachedActor,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherTargetLocation,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForwardDragCoefficient,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_PhysicsRoot,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverHeight,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverForce,
@@ -479,10 +493,10 @@ struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_
 		{ ETetherState_StaticEnum, TEXT("ETetherState"), &Z_Registration_Info_UEnum_ETetherState, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2374149683U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UTetherComponent, UTetherComponent::StaticClass, TEXT("UTetherComponent"), &Z_Registration_Info_UClass_UTetherComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UTetherComponent), 3758318628U) },
+		{ Z_Construct_UClass_UTetherComponent, UTetherComponent::StaticClass, TEXT("UTetherComponent"), &Z_Registration_Info_UClass_UTetherComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UTetherComponent), 2549832905U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_519982640(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_700138510(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::EnumInfo));
