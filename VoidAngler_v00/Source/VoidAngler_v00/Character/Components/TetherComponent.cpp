@@ -7,6 +7,7 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "VoidAngler_v00/Enemy/EnemyParent.h"
 #include "VoidAngler_v00/WorldGeneration/OceanManager.h"
 
 // Sets default values for this component's properties
@@ -80,31 +81,42 @@ void UTetherComponent::SetTetherTargetLocation(AActor* TargetActor, const FVecto
     
     if (PhysicsRoot)
     {
-       float ActualDist = FVector::Dist(TargetLocation, PhysicsRoot->GetComponentLocation());
-       CurrentTetherLength = ActualDist + BaseSlack;
         
-       CurrentTetherState = ETetherState::Spooling;
-       TimeOfRedline = -1.0f; 
-       SimulatedTension = 0.0f;
-
        if (TargetActor)
        {
-          AAnchorPoint* Anchor = Cast<AAnchorPoint>(TargetActor);
-          if (Anchor && Anchor->IsCheckpoint())
-          {
-             APlayerCharacter* Player = Cast<APlayerCharacter>(GetOwner());
-             if (Player)
-             {
-                Player->SetCheckpoint(Anchor->GetActorLocation());
-             }
-          }
+           if (ITargetable* Target = Cast<ITargetable>(TargetActor))
+           {
+               Target->OnHooked();
+           }
        }
+        
+        FVector BodyCOM = PhysicsRoot->GetBodyInstance()->GetMassSpaceToWorldSpace().GetLocation();
+        float InitialDistance = FVector::Distance(AttachedActor->GetActorLocation(), BodyCOM);
+
+        // Set the starting mathematical reality
+        CurrentRestLength = InitialDistance + BaseSlack;
+
+        // Setup the snappy Auto-Spool yank (e.g., auto-reel in 40% of the line instantly)
+        TargetAutoSpoolLength = FMath::Max(MinTetherLength, InitialDistance * 0.9f); 
+       // bIsAutoSpooling = true;
+        TimeOfRedline = -1.0f; 
+        SimulatedTension = 0.0f;
+
     }
     UE_LOG(LogTemp, Log, TEXT("Tether Active. Target: %s"), *TargetLocation.ToString());
 }
 
 void UTetherComponent::DetachTether()
 {
+    ExecuteSlingshotRelease();
+    if (AttachedActor)
+    {
+        ITargetable* HookedTarget = Cast<ITargetable>(AttachedActor);
+        if (HookedTarget)
+        {
+            HookedTarget->OnReleased();
+        }
+    }
     bIsTetherActive = false;
     AttachedActor = nullptr;
     TetherTargetLocation = FVector::ZeroVector;
@@ -124,14 +136,16 @@ void UTetherComponent::DetachTether()
 
 void UTetherComponent::EvaluateRhythmInput()
 {
-    if (CurrentTetherState == ETetherState::Spooling || (CurrentTetherState == ETetherState::Locked && TimeOfRedline < 0.0f))
+    /*if (CurrentTetherState == ETetherState::Spooling || (CurrentTetherState == ETetherState::Locked && TimeOfRedline < 0.0f))
     {
         DetachTether();
         UE_LOG(LogTemp, Warning, TEXT("Tactical Release. Momentum Preserved."));
         return;
-    }
-
-    if (CurrentTetherState == ETetherState::Locked && TimeOfRedline > 0.0f)
+    }*/
+    
+    FString LogMesssage = "Rhythm Input Received.";
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, LogMesssage);
+    if (TimeOfRedline > 0.0f)
     {
         float TimeSinceRedline = GetWorld()->GetTimeSeconds() - TimeOfRedline;
 
@@ -172,6 +186,36 @@ void UTetherComponent::EndDragBurn()
 
 // --- PHYSICS SYSTEMS ---
 
+void UTetherComponent::ExecuteSlingshotRelease()
+{
+    if (CurrentCharge > 5.0f && IsValid(PhysicsRoot))
+    {
+        // 1. Grab your current physical state
+        FVector Velocity = PhysicsRoot->GetPhysicsLinearVelocity();
+        float TotalSpeed = Velocity.Size(); // Your absolute total kinetic energy
+        FVector ReleaseDir = PhysicsRoot->GetRightVector() * -1.0f; // The Nose
+    
+        // 2. THE SNAP (Vector Redirection)
+        // We instantly convert 100% of your sideways/orbiting speed into pure forward speed.
+        // This physically stops the drift dead in its tracks and points you like a laser.
+        PhysicsRoot->SetPhysicsLinearVelocity(ReleaseDir * TotalSpeed);
+    
+        // 3. THE BURST (The Payout)
+        float TotalBurst = CurrentCharge * SlingshotForcePerCharge;
+    
+        // Because your AddImpulse uses 'true' at the end (bVelChange), 
+        // it ignores mass and directly adds this number to your speed.
+        PhysicsRoot->AddImpulse(ReleaseDir * TotalBurst, NAME_None, true); 
+
+        GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString::Printf(TEXT("SLINGSHOT! Speed Transferred: %.0f | Burst Added: %.0f"), TotalSpeed, TotalBurst));
+    
+        // TODO for Sprint 2: If AttachedActor is a Barracuda, call OnLethalStrike() here!
+    }
+
+    // Reset charge
+    CurrentCharge = 0.0f;
+}
+
 void UTetherComponent::ApplySuspension()
 {
     float ForcePerLeg = HoverForce * 0.25f;
@@ -197,6 +241,12 @@ void UTetherComponent::ApplySuspension()
         }
         float DistanceToWater = LegStart.Z - WaterZ;
         //FVector LegEnd = LegStart + (DownDir * TraceDist);
+        
+        
+        // Draw debug lines
+        FColor DebugColor = FColor::Green;
+        FVector LegEnd = LegStart + (FVector::DownVector * TraceDist);
+        DrawDebugLine(GetWorld(), LegStart, LegEnd, DebugColor, false, -1.0f, 0, 1.0f);
 
 
         if (DistanceToWater < TraceDist) 
@@ -205,7 +255,7 @@ void UTetherComponent::ApplySuspension()
             // This naturally acts as massive buoyancy, pushing the board back to the surface!
             float Compression = FMath::Max(1.0f - (DistanceToWater / HoverHeight), 0.0f);
             FVector SpringForce = FVector::UpVector * Compression * ForcePerLeg;
-
+    
             // Your existing perfect damping math
             FVector PointVel = PhysicsRoot->GetPhysicsLinearVelocityAtPoint(LegStart);
             float VerticalSpeed = PointVel.Z;
@@ -233,9 +283,19 @@ void UTetherComponent::ApplyAerodynamics()
 
     if (Speed > 100.0f) 
     {
-        float DragMagnitude = (Speed * Speed) * ForwardDragCoefficient;
-        // Drag only applies strictly backwards on the X/Y plane
-        FVector ForwardDragForce = -VelDir2D * DragMagnitude;
+        float BaseDrag = (Speed * Speed) * ForwardDragCoefficient * Mass;
+    
+        // 2. The Continuous Terminal Curve
+        // No more 80% hack. This applies a curve that starts at 1.0 (no extra drag) 
+        // and exponentially explodes ONLY as you push deep into max speed.
+        float SpeedRatio = FMath::Clamp(Speed / MaxCarveSpeed, 0.0f, 1.0f);
+    
+        // As SpeedRatio approaches 1.0, this multiplier spikes, acting as a natural wall.
+        float TerminalMultiplier = 1.0f + (FMath::Pow(SpeedRatio, 4.0f) * WaterFrictionStrength); 
+
+        // 3. Final Application
+        float TotalDragMagnitude = BaseDrag * TerminalMultiplier;
+        FVector ForwardDragForce = -VelDir2D * TotalDragMagnitude;
         PhysicsRoot->AddForce(ForwardDragForce);
     }
     
@@ -251,61 +311,90 @@ void UTetherComponent::ApplyAerodynamics()
     }
     else if (Speed > MinSpeedForKeelDrag)
     {
-        // 1. THE PERFECT ANTI-DRIFT (Grip Percentage Logic)
-        // Calculate exactly how fast we are sliding sideways along the 2D plane
+        // 1. THE RAW ANTI-DRIFT
         float LateralSpeed = FVector::DotProduct(Velocity, BoardSide2D);
-       
-        // This is the EXACT force required to stop the drift in one frame.
-        // Because it includes Mass and DeltaTime, it is frame-rate independent.
         FVector PerfectStoppingForce = (-BoardSide2D * LateralSpeed * Mass) / DeltaTime;
        
-        // KeelDrag is now your "Grip %" (e.g., 0.1 = 10% Grip)
-        float GripPercentage = FMath::Clamp(KeelDrag, 0.0f, 1.0f); 
+        float GripPercentage = FMath::Clamp(KeelDrag, 0.0f, 1.0f);
+        if (!IsValid(AttachedActor))
+        {
+            // If free-roaming, drastically reduce grip for a loose, flowy carve
+            GripPercentage *= UntetheredGripMultiplier;
+        }
         FVector AntiDriftForce = PerfectStoppingForce * GripPercentage;
        
-        // 2. THE ACTIVE CARVE (Centripetal Force)
-        // We use the 3D lean (Z) to determine how much the edge "bites" the water.
+        // 1.5 THE SAFETY CLAMP (The "Blowout" Mechanic)
+        // We physically forbid the anti-drift from exceeding your MaxKeelGripForce.
+        // GetClampedToMaxSize perfectly preserves the direction but scales the power down
+        if (IsValid(AttachedActor))
+        {
+            AntiDriftForce = AntiDriftForce.GetClampedToMaxSize(MaxKeelGripForce);
+        }
+        // 2. THE ACTIVE CARVE
         float EdgeBite = BoardSide3D.Z; 
-       
-        // We scale this force with Speed and Mass so it feels heavy and powerful at Mach 2.
-        // Increasing CarveMultiplier makes the turn sharper.
         float CarveMultiplier = 2.0f; 
         FVector ActiveCarveForce = BoardSide2D * -EdgeBite * Speed * (GripPercentage * CarveMultiplier * Mass);
+        
+        // Optional: You can also clamp the carve force if you find high-speed turning too violent
+        // ActiveCarveForce = ActiveCarveForce.GetClampedToMaxSize(MaxKeelGripForce * 1.5f);
        
-        // Apply the combined flat 2D forces. 
-        // This is the "Holy Grail": Stable momentum-based grip that can't jitter, 
-        // isolated to the 2D plane so it can't fight the suspension.
+        // Apply the combined flat 2D forces
         PhysicsRoot->AddForce(AntiDriftForce + ActiveCarveForce);
     }
 }
 
 void UTetherComponent::ApplyControl()
 {
+    CurrentSteerCommand = -1 * FMath::FInterpTo(CurrentSteerCommand, EdgeInput, GetWorld()->GetDeltaSeconds(), SteerInterpSpeed);
+    
+    FVector CurrentNose = PhysicsRoot->GetRightVector() * -1.0f;
+    FVector BoardSide = PhysicsRoot->GetForwardVector(); // The axis sticking out the side of your board
+
     if (!bIsBraking)
     {
-       PhysicsRoot->SetAngularDamping(4.0f);
-       FVector CurrentNose = PhysicsRoot->GetRightVector() * -1.0f;
-       FVector FlatNose = FVector::VectorPlaneProject(CurrentNose, FVector::UpVector).GetSafeNormal();
-       FVector FlatTarget = FVector::VectorPlaneProject(DesiredHeading, FVector::UpVector).GetSafeNormal();
-       float HeadingError = FVector::CrossProduct(FlatNose, FlatTarget).Z;
+        PhysicsRoot->SetAngularDamping(4.0f);
+        
+        // 1. STEERING (YAW)
+        FVector AlignTorque = FVector::UpVector * CurrentSteerCommand * CameraSteerStrength;
+        PhysicsRoot->AddTorqueInRadians(AlignTorque, NAME_None, true);
        
-       FVector AlignTorque = FVector::UpVector * HeadingError * CameraSteerStrength;
-       PhysicsRoot->AddTorqueInRadians(AlignTorque, NAME_None, true);
-       
-       FVector BankTorque = CurrentNose * HeadingError * -RollStrength; 
-       PhysicsRoot->AddTorqueInRadians(BankTorque, NAME_None, true);
+        // 2. INITIAL TURN KICK (ROLL/PITCH)
+        // We keep this to make the joystick feel responsive, but the spring will do the heavy holding.
+        FVector BankTorque = CurrentNose * CurrentSteerCommand * -RollStrength; 
+        PhysicsRoot->AddTorqueInRadians(BankTorque, NAME_None, true);
     }
     else
     {
-       PhysicsRoot->SetAngularDamping(6.0f);
+        PhysicsRoot->SetAngularDamping(6.0f);
     }
 
-    float TargetPitch = bIsBraking ? BrakingPitchAngle : 0.0f;
+    // --- PHASE 1 & 2: THE PHYSICS-DRIVEN LEAN ---
+    float DynamicTargetPitch = 0.0f;
+
+    // Check if we are currently holding the rope
+    if (IsValid(AttachedActor))
+    {
+        // Calculate lateral velocity (how fast are we sliding sideways?)
+        FVector Velocity = PhysicsRoot->GetPhysicsLinearVelocity();
+        float LateralSpeed = FVector::DotProduct(Velocity, BoardSide);
+        
+        // Map that speed to a ratio (-1.0 to 1.0)
+        float LeanRatio = FMath::Clamp(LateralSpeed / SpeedForMaxLean, -1.0f, 1.0f);
+        
+        // Multiply by your max angle. 
+        // Note: You may need to multiply this by -1.0f depending on which way your cube flips!
+        DynamicTargetPitch = LeanRatio * MaxCarveLeanAngle; 
+    }
+
+    // If we are braking, pitch up. Otherwise, seek our new dynamic lean angle!
+    float TargetPitch = bIsBraking ? BrakingPitchAngle : DynamicTargetPitch;
+    
     if (bIsBraking) PhysicsRoot->SetAngularDamping(8.0f);
     
+    // --- THE HIJACKED UPRIGHT SPRING ---
     FRotator CurrentRot = PhysicsRoot->GetComponentRotation();
     float BankAngle = CurrentRot.Pitch;
-    float TargetAngle = BankAngle - TargetPitch;
+    float TargetAngle = BankAngle - TargetPitch; // The spring now naturally pulls towards your carve angle
     float AngleError = FMath::Abs(TargetAngle);
     
     float NormalizedError = bIsBraking ? 1.0f : FMath::Clamp(AngleError / MaxStabilityAngle, 0.0f, 1.0f);
@@ -333,85 +422,110 @@ void UTetherComponent::ApplyControl()
 
 void UTetherComponent::ApplyTetherForces()
 {
-    if (!PhysicsRoot || CurrentTetherState == ETetherState::Inactive) return;
+   if (!IsValid(PhysicsRoot) || !PhysicsRoot->IsSimulatingPhysics() || !IsValid(AttachedActor)) return;
 
-    FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
-    FVector BodyCOM = PhysicsRoot->GetBodyInstance()->GetMassSpaceToWorldSpace().GetLocation();
-    FVector TetherLine = (TetherTargetLocation - BodyCOM);
-    float Distance = TetherLine.Size();
-    FVector TetherDir = TetherLine.GetSafeNormal();
     float DeltaTime = GetWorld()->GetDeltaSeconds();
-    FVector PlayerVel = PhysicsRoot->GetComponentVelocity();
-    // ---------------------------------------------------------
-    // PHASE 1: V2 AUTO-SPOOLING (The Wind-Up)
-    // ---------------------------------------------------------
-    if (CurrentTetherState == ETetherState::Spooling)
-    {
-        DrawDebugLine(GetWorld(), CurrentLoc, TetherTargetLocation, FColor::Green, false, -1.f, 0, 3.f);
-        
-        float ClosingSpeed = FVector::DotProduct(PlayerVel, TetherDir);
-        float DynamicSpoolSpeed = AutoSpoolSpeed + FMath::Max(0.0f, ClosingSpeed * 1.5f);
-        
-        CurrentTetherLength -= (DynamicSpoolSpeed * DeltaTime); 
-        CurrentTetherLength = FMath::Max(CurrentTetherLength, MinTetherLength);
+    if (DeltaTime <= 0.0f) return; 
 
-        if (Distance >= CurrentTetherLength)
-        {
-            CurrentTetherState = ETetherState::Locked;
-        }
+    FVector BoardLoc = PhysicsRoot->GetComponentLocation();
+    FVector TargetLoc = AttachedActor->GetActorLocation(); 
+    FVector TetherVec = TargetLoc - BoardLoc;
+    float CurrentDistance = TetherVec.Size();
+    
+    if (CurrentDistance < 50.0f) return;
+    
+    FVector TetherDir = TetherVec / CurrentDistance; 
+    FVector Velocity = PhysicsRoot->GetPhysicsLinearVelocity();
+    float CurrentSpeed = Velocity.Size();
+    float Mass = PhysicsRoot->GetMass();
+
+    // --- 1. DECONSTRUCT VELOCITY ---
+    float InwardSpeed = FVector::DotProduct(Velocity, TetherDir);
+    FVector TangentialVelocity = Velocity - (TetherDir * InwardSpeed);
+    float TangentialSpeedSq = TangentialVelocity.SizeSquared();
+
+    // --- 2. THE SMOOTH PULL ---
+    float SpeedDeficit = MinTowSpeed - InwardSpeed;
+    FVector TowForce = FVector::ZeroVector;
+    
+    if (SpeedDeficit > 0.0f)
+    {
+        // Ease-in the tow force so it doesn't instantly jerk you at low speeds
+        float TowFactor = FMath::Clamp(SpeedDeficit / MinTowSpeed, 0.0f, 1.0f);
+        TowForce = TetherDir * (TowFactor * Mass * TowAcceleration * 50.0f);
     }
 
-    // ---------------------------------------------------------
-    // PHASE 2: REFINED V1 SPRING & REDLINE
-    // ---------------------------------------------------------
-    if (CurrentTetherState == ETetherState::Locked)
+    // --- 3. THE CORNER CARVE (Centripetal Force) ---
+    float CentripetalMagnitude = (Mass * TangentialSpeedSq) / CurrentDistance;
+    FVector CentripetalForce = TetherDir * CentripetalMagnitude;
+
+    // --- 4. THE PROGRESSIVE RUBBER BAND ---
+    FVector BoundaryForce = FVector::ZeroVector;
+    if (CurrentDistance > MaxLeashRadius) 
     {
-        if (WinchInputValue > 0.1f) 
-        {
-            CurrentTetherLength -= (ReelInSpeed * DeltaTime * WinchInputValue);
-            CurrentTetherLength = FMath::Max(CurrentTetherLength, MinTetherLength);
-        }
-
-        float StretchRatio = FMath::Clamp((Distance / CurrentTetherLength), 0.0f, MaxStretchRatioClamp);
-        FVector PullForce = TetherDir * TetherStrength * StretchRatio;
-        PhysicsRoot->AddForceAtLocation(PullForce, BodyCOM);
-
-        FVector BoardForward = PhysicsRoot->GetRightVector() * -1.0f; 
-        float Alignment = FVector::DotProduct(BoardForward, TetherDir);
-        float CutEfficiency = FVector::CrossProduct(BoardForward, TetherDir).Size();
-
-        if (Alignment > MinAlignmentForLift) 
-        {
-            FVector LiftForce = BoardForward * CutEfficiency * FoilLiftStrength;
-            PhysicsRoot->AddForce(LiftForce);
-        }
-        else 
-        {
-            // Safety: Disconnect if anchor passes behind
-            DetachTether();
-            return;
-        }
-
-        FColor LineColor = (WinchInputValue > 0.1f) ? FColor::Magenta : FColor::Red;
-        DrawDebugLine(GetWorld(), CurrentLoc, TetherTargetLocation, LineColor, false, -1.f, 0, 3.f * StretchRatio);
-
-        // --- THE REDLINE TRACKER ---
-        if (StretchRatio > TensionStretchThreshold || WinchInputValue > 0.1f)
-        {
-            SimulatedTension += (TensionBuildRate * DeltaTime); 
-        }
-        else
-        {
-            SimulatedTension = FMath::Max(0.0f, SimulatedTension - (TensionDecayRate * DeltaTime));
-        }
+        float Stretch = CurrentDistance - MaxLeashRadius;
         
-        //GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Simulated Tension: %.2f"), SimulatedTension));
-        if (SimulatedTension >= MaxSimulatedTension && TimeOfRedline < 0.0f)
+        // 1. Pure Linear Spring (No more exponential multiplying)
+        float SpringForce = Stretch * BungeeStiffness;
+        
+        // 2. Linear Damping (Slows you down smoothly without snapping)
+        float DampingForce = 0.0f;
+        if (InwardSpeed < 0.0f) // If you are moving away from the anchor
         {
-            TimeOfRedline = GetWorld()->GetTimeSeconds();
-            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("REDLINE REACHED! Whip-Crack Armed."));
+            DampingForce = FMath::Abs(InwardSpeed) * BungeeDamping;
         }
+
+        // Combine the forces
+        float TotalBungeeAccel = SpringForce + DampingForce;
+
+        // 3. THE SAFETY CLAMP (Kills the Yank)
+        // This is the absolute maximum acceleration the rubber band is allowed to apply.
+        // If it still yanks too hard, lower this number to 10000.0f or 5000.0f.
+        TotalBungeeAccel = FMath::Min(TotalBungeeAccel, MaxBungeeAccel);
+
+        // Apply force based on mass
+        BoundaryForce = TetherDir * (TotalBungeeAccel * Mass);
     }
+
+    // Apply the structural physics
+    PhysicsRoot->AddForce(TowForce + BoundaryForce);
+    
+    // --- 5. THE CARVE LIFT & SMOOTH ACCELERATION ---
+    FVector BoardForward = PhysicsRoot->GetRightVector() * -1.0f;
+    float AlignmentDot = FVector::DotProduct(BoardForward, TetherDir);
+    float AngleError = FMath::Abs(AlignmentDot - OptimalCarveDot);
+    
+    if (AngleError <= CarveTolerance) 
+    {
+        float CarveQuality = 1.0f - (AngleError / CarveTolerance); 
+        
+        CurrentCharge += (BaseChargeRate * CarveQuality * DeltaTime);
+        CurrentCharge = FMath::Clamp(CurrentCharge, 0.0f, MaxCharge);
+        
+        // THE ASYMPTOTE: Smoothly curves your acceleration down as you approach Max Speed.
+        // At 0 speed, SpeedLimiter is 1.0 (100% engine power). 
+        // At 95% max speed, SpeedLimiter is 0.0025 (Barely pushing).
+        float SpeedRatio = FMath::Clamp(CurrentSpeed / MaxCarveSpeed, 0.0f, 1.0f);
+        float SpeedLimiter = FMath::Pow(1.0f - SpeedRatio, 2.0f);
+        
+        float DynamicLift = FoilLiftStrength * CarveQuality * (1.0f + (CurrentCharge / 20.0f)) * SpeedLimiter; 
+        PhysicsRoot->AddForce(BoardForward * DynamicLift);
+
+        GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::Orange, FString::Printf(TEXT("CARVING [Quality: %.2f] CHARGE: %.0f"), CarveQuality, CurrentCharge));
+    }
+    else
+    {
+        CurrentCharge = FMath::Max(0.0f, CurrentCharge - (BaseChargeRate * 2.0f * DeltaTime));
+    }
+    
+    // We only deploy the parachute if you are pushing past 80% of your max speed
+    
+
+    // --- 6. VISUALS ---
+    float ChargeRatio = CurrentCharge / MaxCharge;
+    FColor LineColor = FMath::Lerp(FLinearColor::White, FLinearColor(FColor::Orange), ChargeRatio).ToFColor(true);
+    float LineThickness = FMath::Lerp(2.0f, 15.0f, ChargeRatio);
+    DrawDebugLine(GetWorld(), BoardLoc, TargetLoc, LineColor, false, -1.f, 0, LineThickness);
 }
 
 // Called every frame
@@ -419,22 +533,49 @@ void UTetherComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
     
-    ApplySuspension();
+    /*ApplySuspension();
     ApplyAerodynamics();
     ApplyControl();
     
-    if (IsTetherActive())
+    FVector Velocity = PhysicsRoot->GetComponentVelocity();
+    FString VelocityMessage = FString::Printf(TEXT("Player Velocity: %.0f"), Velocity.Size());
+    GEngine->AddOnScreenDebugMessage(1, 0.1f, FColor::Green, VelocityMessage);
+    
+    if (ReelLockoutTimer > 0.0f)
     {
-       if (AttachedActor)
-       {
-          if (!IsValid(AttachedActor))
-          {
-             DetachTether();
-             return;
-          }
-
-          TetherTargetLocation = AttachedActor->GetActorLocation();
-          ApplyTetherForces();
-       }
+        ReelLockoutTimer -= DeltaTime;
     }
+    if (IsTetherActive() && IsValid(AttachedActor))
+    {
+        if (bIsAutoSpooling)
+        {
+            CurrentRestLength -= (AutoSpoolSpeed * DeltaTime);
+            if (CurrentRestLength <= TargetAutoSpoolLength)
+            {
+                CurrentRestLength = TargetAutoSpoolLength;
+                bIsAutoSpooling = false; // Hand control to player
+            }
+        }
+        else if (WinchInputValue > 0.1f) // "Holding Shift"
+        {
+            // ONLY reel in if the lockout timer has expired
+            if (ReelLockoutTimer <= 0.0f)
+            {
+                CurrentRestLength -= (ManualSpoolSpeed * DeltaTime * WinchInputValue);
+            }
+            else 
+            {
+                // Optional: Feedback that the reel is jammed (sound/UI shake)
+            }
+            
+        }
+
+        // Clamp to prevent universe-ending physics inversions
+        CurrentRestLength = FMath::Max(CurrentRestLength, MinTetherLength);
+
+        // 2. EXECUTE PHYSICS BASED ON THE NEW STATE
+        ApplyTetherForces();
+        //TetherTargetLocation = AttachedActor->GetActorLocation();
+    } */
+    
 }

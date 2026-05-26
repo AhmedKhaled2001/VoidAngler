@@ -3,14 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
 #include "BoardComponent.generated.h"
 
-/**
- * 
- */
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class VOIDANGLER_V00_API UBoardComponent : public UStaticMeshComponent
+class VOIDANGLER_V00_API UBoardComponent : public UBoxComponent
 {
 
 	GENERATED_BODY()

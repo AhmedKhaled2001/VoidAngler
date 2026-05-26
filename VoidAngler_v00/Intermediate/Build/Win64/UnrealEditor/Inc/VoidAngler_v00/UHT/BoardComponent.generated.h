@@ -14,16 +14,16 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #endif
 #define VOIDANGLER_V00_BoardComponent_generated_h
 
-#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_16_INCLASS_NO_PURE_DECLS \
+#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_13_INCLASS_NO_PURE_DECLS \
 private: \
 	static void StaticRegisterNativesUBoardComponent(); \
 	friend struct Z_Construct_UClass_UBoardComponent_Statics; \
 public: \
-	DECLARE_CLASS(UBoardComponent, UStaticMeshComponent, COMPILED_IN_FLAGS(0 | CLASS_Config), CASTCLASS_None, TEXT("/Script/VoidAngler_v00"), NO_API) \
+	DECLARE_CLASS(UBoardComponent, UBoxComponent, COMPILED_IN_FLAGS(0 | CLASS_Config), CASTCLASS_None, TEXT("/Script/VoidAngler_v00"), NO_API) \
 	DECLARE_SERIALIZER(UBoardComponent)
 
 
-#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_16_ENHANCED_CONSTRUCTORS \
+#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_13_ENHANCED_CONSTRUCTORS \
 private: \
 	/** Private move- and copy-constructors, should never be used */ \
 	UBoardComponent(UBoardComponent&&); \
@@ -35,12 +35,12 @@ public: \
 	NO_API virtual ~UBoardComponent();
 
 
-#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_12_PROLOG
-#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_16_GENERATED_BODY \
+#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_9_PROLOG
+#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_13_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
-	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_16_INCLASS_NO_PURE_DECLS \
-	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_16_ENHANCED_CONSTRUCTORS \
+	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_13_INCLASS_NO_PURE_DECLS \
+	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_13_ENHANCED_CONSTRUCTORS \
 private: \
 PRAGMA_ENABLE_DEPRECATION_WARNINGS
 

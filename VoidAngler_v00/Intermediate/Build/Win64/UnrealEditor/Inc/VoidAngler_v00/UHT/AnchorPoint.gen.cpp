@@ -17,6 +17,7 @@ ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent_NoRegister();
 UPackage* Z_Construct_UPackage__Script_VoidAngler_v00();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_AAnchorPoint();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_AAnchorPoint_NoRegister();
+VOIDANGLER_V00_API UClass* Z_Construct_UClass_UTargetable_NoRegister();
 // End Cross Module References
 
 // Begin Class AAnchorPoint
@@ -71,6 +72,7 @@ struct Z_Construct_UClass_AAnchorPoint_Statics
 	static const UECodeGen_Private::FStructPropertyParams NewProp_LockedColor;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
+	static const UECodeGen_Private::FImplementedInterfaceParams InterfaceParams[];
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
 		TCppClassTypeTraits<AAnchorPoint>::IsAbstract,
 	};
@@ -100,6 +102,9 @@ UObject* (*const Z_Construct_UClass_AAnchorPoint_Statics::DependentSingletons[])
 	(UObject* (*)())Z_Construct_UPackage__Script_VoidAngler_v00,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_AAnchorPoint_Statics::DependentSingletons) < 16);
+const UECodeGen_Private::FImplementedInterfaceParams Z_Construct_UClass_AAnchorPoint_Statics::InterfaceParams[] = {
+	{ Z_Construct_UClass_UTargetable_NoRegister, (int32)VTABLE_OFFSET(AAnchorPoint, ITargetable), false },  // 1541049264
+};
 const UECodeGen_Private::FClassParams Z_Construct_UClass_AAnchorPoint_Statics::ClassParams = {
 	&AAnchorPoint::StaticClass,
 	"Engine",
@@ -107,11 +112,11 @@ const UECodeGen_Private::FClassParams Z_Construct_UClass_AAnchorPoint_Statics::C
 	DependentSingletons,
 	nullptr,
 	Z_Construct_UClass_AAnchorPoint_Statics::PropPointers,
-	nullptr,
+	InterfaceParams,
 	UE_ARRAY_COUNT(DependentSingletons),
 	0,
 	UE_ARRAY_COUNT(Z_Construct_UClass_AAnchorPoint_Statics::PropPointers),
-	0,
+	UE_ARRAY_COUNT(InterfaceParams),
 	0x009000A4u,
 	METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UClass_AAnchorPoint_Statics::Class_MetaDataParams), Z_Construct_UClass_AAnchorPoint_Statics::Class_MetaDataParams)
 };
@@ -135,10 +140,10 @@ AAnchorPoint::~AAnchorPoint() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Traversal_AnchorPoint_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AAnchorPoint, AAnchorPoint::StaticClass, TEXT("AAnchorPoint"), &Z_Registration_Info_UClass_AAnchorPoint, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAnchorPoint), 2792991008U) },
+		{ Z_Construct_UClass_AAnchorPoint, AAnchorPoint::StaticClass, TEXT("AAnchorPoint"), &Z_Registration_Info_UClass_AAnchorPoint, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AAnchorPoint), 2528170477U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Traversal_AnchorPoint_h_1335676165(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Traversal_AnchorPoint_h_113545069(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Traversal_AnchorPoint_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Traversal_AnchorPoint_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

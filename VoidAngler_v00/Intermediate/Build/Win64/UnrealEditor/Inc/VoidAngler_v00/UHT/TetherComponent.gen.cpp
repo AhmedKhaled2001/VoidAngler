@@ -117,8 +117,36 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 		{ "Category", "Aerodynamics" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxCarveLeanAngle_MetaData[] = {
+		{ "Category", "PowerWake|Visuals" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The maximum angle (in degrees) the board will lean when carving at full speed.\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The maximum angle (in degrees) the board will lean when carving at full speed." },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_UntetheredGripMultiplier_MetaData[] = {
+		{ "Category", "PowerWake|Aerodynamics" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SpeedForMaxLean_MetaData[] = {
+		{ "Category", "PowerWake|Visuals" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The lateral speed required to reach the maximum lean angle. \n// Lower = leans easier. Higher = takes massive speed to lean fully.\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The lateral speed required to reach the maximum lean angle.\nLower = leans easier. Higher = takes massive speed to lean fully." },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PhysicsRoot_MetaData[] = {
 		{ "EditInline", "true" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxKeelGripForce_MetaData[] = {
+		{ "Category", "PowerWake|Aerodynamics" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_HoverHeight_MetaData[] = {
@@ -209,6 +237,53 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 		{ "Category", "Control" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentRestLength_MetaData[] = {
+		{ "Category", "Tether|State" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// --- 1. STATE & SPOOLING ---\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "--- 1. STATE & SPOOLING ---" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MinTetherLength_MetaData[] = {
+		{ "Category", "Tether|Settings" },
+		{ "ClampMin", "10.0" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AutoSpoolSpeed_MetaData[] = {
+		{ "Category", "Tether|Spooling" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ManualSpoolSpeed_MetaData[] = {
+		{ "Category", "Tether|Spooling" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TetherStiffness_MetaData[] = {
+		{ "Category", "Tether|Physics" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// --- 2. THE PD CONTROLLER (PHYSICS) ---\n// NOTE: Because we are no longer ignoring mass, these numbers need to be BIG (e.g., 50000.0f)\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "--- 2. THE PD CONTROLLER (PHYSICS) ---\nNOTE: Because we are no longer ignoring mass, these numbers need to be BIG (e.g., 50000.0f)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TetherDamping_MetaData[] = {
+		{ "Category", "Tether|Physics" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ForcedDespoolRate_MetaData[] = {
+		{ "Category", "Tether|Mechanics" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// How fast the line violently rips out when the drag fails\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "How fast the line violently rips out when the drag fails" },
+#endif
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BaseSlack_MetaData[] = {
 		{ "Category", "Tether|Core" },
 #if !UE_BUILD_SHIPPING
@@ -219,24 +294,12 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 		{ "ToolTip", "--- TETHER CORE (V1 Hybrid) ---" },
 #endif
 	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_AutoSpoolSpeed_MetaData[] = {
-		{ "Category", "Tether|Core" },
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ReelLockoutDuration_MetaData[] = {
+		{ "Category", "Tether|Mechanics" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MinTetherLength_MetaData[] = {
-		{ "Category", "Tether|Core" },
-		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
-	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_ReelInSpeed_MetaData[] = {
-		{ "Category", "Tether|Core" },
-		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
-	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TetherStrength_MetaData[] = {
-		{ "Category", "Tether|Core" },
-		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
-	};
-	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxStretchRatioClamp_MetaData[] = {
-		{ "Category", "Tether|Core" },
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxStretchRatio_MetaData[] = {
+		{ "Category", "Tether|Mechanics" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_FoilLiftStrength_MetaData[] = {
@@ -299,6 +362,130 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 		{ "Category", "Tether|Rhythm" },
 		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SteerInterpSpeed_MetaData[] = {
+		{ "Category", "Hoverboard|Steering" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentCharge_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The current stored kinetic energy from carving against the tether\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The current stored kinetic energy from carving against the tether" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxCharge_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The maximum amount of charge the player can hold\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The maximum amount of charge the player can hold" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BaseChargeRate_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The baseline rate charge builds when circling the anchor perfectly (Dot Product = 0)\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The baseline rate charge builds when circling the anchor perfectly (Dot Product = 0)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxCarveMultiplier_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// Multiplier applied when the player steers aggressively AWAY from the anchor\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "Multiplier applied when the player steers aggressively AWAY from the anchor" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SlingshotForcePerCharge_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The massive forward impulse applied upon release (Multiplied by CurrentCharge)\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The massive forward impulse applied upon release (Multiplied by CurrentCharge)" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxLeashRadius_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The rigid maximum length of the tether. The player physically cannot exceed this distance.\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The rigid maximum length of the tether. The player physically cannot exceed this distance." },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MinTowSpeed_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// THE SKI-BOAT: The minimum speed the tether will drag you toward the anchor\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "THE SKI-BOAT: The minimum speed the tether will drag you toward the anchor" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxCarveSpeed_MetaData[] = {
+		{ "Category", "PowerWake" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TowAcceleration_MetaData[] = {
+		{ "Category", "PowerWake" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// How aggressively the tether accelerates you to match the Tow Speed\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "How aggressively the tether accelerates you to match the Tow Speed" },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_OptimalCarveDot_MetaData[] = {
+		{ "Category", "PowerWake|Carving" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CarveTolerance_MetaData[] = {
+		{ "Category", "PowerWake|Carving" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// How far from the optimal angle the player can be before the charge drops to zero.\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "How far from the optimal angle the player can be before the charge drops to zero." },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BungeeStiffness_MetaData[] = {
+		{ "Category", "PowerWake|Movement" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxBungeeAccel_MetaData[] = {
+		{ "Category", "PowerWake|Movement" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BungeeDamping_MetaData[] = {
+		{ "Category", "PowerWake|Movement" },
+#if !UE_BUILD_SHIPPING
+		{ "Comment", "// The shock absorber. Prevents the bungee from bouncing you infinitely like a yo-yo.\n" },
+#endif
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+#if !UE_BUILD_SHIPPING
+		{ "ToolTip", "The shock absorber. Prevents the bungee from bouncing you infinitely like a yo-yo." },
+#endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_WaterFrictionStrength_MetaData[] = {
+		{ "Category", "PowerWake|Movement" },
+		{ "ModuleRelativePath", "Character/Components/TetherComponent.h" },
+	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FBytePropertyParams NewProp_CurrentTetherState_Underlying;
 	static const UECodeGen_Private::FEnumPropertyParams NewProp_CurrentTetherState;
@@ -308,7 +495,11 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 	static const UECodeGen_Private::FBoolPropertyParams NewProp_bIsTetherActive;
 	static const UECodeGen_Private::FStructPropertyParams NewProp_TetherTargetLocation;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ForwardDragCoefficient;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxCarveLeanAngle;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_UntetheredGripMultiplier;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_SpeedForMaxLean;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_PhysicsRoot;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxKeelGripForce;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_HoverHeight;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_HoverForce;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_HoverDamping;
@@ -328,12 +519,16 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_PitchDamping;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_YawDamping;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_RollDamping;
-	static const UECodeGen_Private::FFloatPropertyParams NewProp_BaseSlack;
-	static const UECodeGen_Private::FFloatPropertyParams NewProp_AutoSpoolSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CurrentRestLength;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MinTetherLength;
-	static const UECodeGen_Private::FFloatPropertyParams NewProp_ReelInSpeed;
-	static const UECodeGen_Private::FFloatPropertyParams NewProp_TetherStrength;
-	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxStretchRatioClamp;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_AutoSpoolSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_ManualSpoolSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_TetherStiffness;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_TetherDamping;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_ForcedDespoolRate;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_BaseSlack;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_ReelLockoutDuration;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxStretchRatio;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_FoilLiftStrength;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MinAlignmentForLift;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_TensionStretchThreshold;
@@ -346,6 +541,22 @@ struct Z_Construct_UClass_UTetherComponent_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_BaseLinearDamping;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_DragBurnDuration;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_WhipCrackSpeedMultiplier;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_SteerInterpSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CurrentCharge;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxCharge;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_BaseChargeRate;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxCarveMultiplier;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_SlingshotForcePerCharge;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxLeashRadius;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MinTowSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxCarveSpeed;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_TowAcceleration;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_OptimalCarveDot;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CarveTolerance;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_BungeeStiffness;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxBungeeAccel;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_BungeeDamping;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_WaterFrictionStrength;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FCppClassTypeInfoStatic StaticCppClassTypeInfo = {
@@ -364,7 +575,11 @@ void Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive_SetBit
 const UECodeGen_Private::FBoolPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive = { "bIsTetherActive", nullptr, (EPropertyFlags)0x0020080000020001, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(UTetherComponent), &Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive_SetBit, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_bIsTetherActive_MetaData), NewProp_bIsTetherActive_MetaData) };
 const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherTargetLocation = { "TetherTargetLocation", nullptr, (EPropertyFlags)0x0020080000020001, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TetherTargetLocation), Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TetherTargetLocation_MetaData), NewProp_TetherTargetLocation_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForwardDragCoefficient = { "ForwardDragCoefficient", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ForwardDragCoefficient), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ForwardDragCoefficient_MetaData), NewProp_ForwardDragCoefficient_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveLeanAngle = { "MaxCarveLeanAngle", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxCarveLeanAngle), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxCarveLeanAngle_MetaData), NewProp_MaxCarveLeanAngle_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_UntetheredGripMultiplier = { "UntetheredGripMultiplier", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, UntetheredGripMultiplier), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_UntetheredGripMultiplier_MetaData), NewProp_UntetheredGripMultiplier_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_SpeedForMaxLean = { "SpeedForMaxLean", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, SpeedForMaxLean), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SpeedForMaxLean_MetaData), NewProp_SpeedForMaxLean_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_PhysicsRoot = { "PhysicsRoot", nullptr, (EPropertyFlags)0x0020080000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, PhysicsRoot), Z_Construct_UClass_UPrimitiveComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhysicsRoot_MetaData), NewProp_PhysicsRoot_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxKeelGripForce = { "MaxKeelGripForce", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxKeelGripForce), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxKeelGripForce_MetaData), NewProp_MaxKeelGripForce_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverHeight = { "HoverHeight", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, HoverHeight), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HoverHeight_MetaData), NewProp_HoverHeight_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverForce = { "HoverForce", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, HoverForce), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HoverForce_MetaData), NewProp_HoverForce_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverDamping = { "HoverDamping", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, HoverDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_HoverDamping_MetaData), NewProp_HoverDamping_MetaData) };
@@ -384,12 +599,16 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponen
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_PitchDamping = { "PitchDamping", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, PitchDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PitchDamping_MetaData), NewProp_PitchDamping_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_YawDamping = { "YawDamping", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, YawDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_YawDamping_MetaData), NewProp_YawDamping_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_RollDamping = { "RollDamping", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, RollDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_RollDamping_MetaData), NewProp_RollDamping_MetaData) };
-const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseSlack = { "BaseSlack", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BaseSlack), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BaseSlack_MetaData), NewProp_BaseSlack_MetaData) };
-const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_AutoSpoolSpeed = { "AutoSpoolSpeed", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, AutoSpoolSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AutoSpoolSpeed_MetaData), NewProp_AutoSpoolSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentRestLength = { "CurrentRestLength", nullptr, (EPropertyFlags)0x0020080000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, CurrentRestLength), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentRestLength_MetaData), NewProp_CurrentRestLength_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinTetherLength = { "MinTetherLength", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MinTetherLength), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MinTetherLength_MetaData), NewProp_MinTetherLength_MetaData) };
-const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ReelInSpeed = { "ReelInSpeed", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ReelInSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ReelInSpeed_MetaData), NewProp_ReelInSpeed_MetaData) };
-const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherStrength = { "TetherStrength", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TetherStrength), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TetherStrength_MetaData), NewProp_TetherStrength_MetaData) };
-const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxStretchRatioClamp = { "MaxStretchRatioClamp", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxStretchRatioClamp), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxStretchRatioClamp_MetaData), NewProp_MaxStretchRatioClamp_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_AutoSpoolSpeed = { "AutoSpoolSpeed", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, AutoSpoolSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_AutoSpoolSpeed_MetaData), NewProp_AutoSpoolSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ManualSpoolSpeed = { "ManualSpoolSpeed", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ManualSpoolSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ManualSpoolSpeed_MetaData), NewProp_ManualSpoolSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherStiffness = { "TetherStiffness", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TetherStiffness), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TetherStiffness_MetaData), NewProp_TetherStiffness_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherDamping = { "TetherDamping", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TetherDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TetherDamping_MetaData), NewProp_TetherDamping_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForcedDespoolRate = { "ForcedDespoolRate", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ForcedDespoolRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ForcedDespoolRate_MetaData), NewProp_ForcedDespoolRate_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseSlack = { "BaseSlack", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BaseSlack), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BaseSlack_MetaData), NewProp_BaseSlack_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_ReelLockoutDuration = { "ReelLockoutDuration", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, ReelLockoutDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ReelLockoutDuration_MetaData), NewProp_ReelLockoutDuration_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxStretchRatio = { "MaxStretchRatio", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxStretchRatio), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxStretchRatio_MetaData), NewProp_MaxStretchRatio_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_FoilLiftStrength = { "FoilLiftStrength", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, FoilLiftStrength), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_FoilLiftStrength_MetaData), NewProp_FoilLiftStrength_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinAlignmentForLift = { "MinAlignmentForLift", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MinAlignmentForLift), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MinAlignmentForLift_MetaData), NewProp_MinAlignmentForLift_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TensionStretchThreshold = { "TensionStretchThreshold", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TensionStretchThreshold), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TensionStretchThreshold_MetaData), NewProp_TensionStretchThreshold_MetaData) };
@@ -402,6 +621,22 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponen
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseLinearDamping = { "BaseLinearDamping", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BaseLinearDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BaseLinearDamping_MetaData), NewProp_BaseLinearDamping_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_DragBurnDuration = { "DragBurnDuration", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, DragBurnDuration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_DragBurnDuration_MetaData), NewProp_DragBurnDuration_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_WhipCrackSpeedMultiplier = { "WhipCrackSpeedMultiplier", nullptr, (EPropertyFlags)0x0020080000000005, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, WhipCrackSpeedMultiplier), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_WhipCrackSpeedMultiplier_MetaData), NewProp_WhipCrackSpeedMultiplier_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_SteerInterpSpeed = { "SteerInterpSpeed", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, SteerInterpSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SteerInterpSpeed_MetaData), NewProp_SteerInterpSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentCharge = { "CurrentCharge", nullptr, (EPropertyFlags)0x0020080000020015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, CurrentCharge), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentCharge_MetaData), NewProp_CurrentCharge_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCharge = { "MaxCharge", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxCharge), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxCharge_MetaData), NewProp_MaxCharge_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseChargeRate = { "BaseChargeRate", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BaseChargeRate), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BaseChargeRate_MetaData), NewProp_BaseChargeRate_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveMultiplier = { "MaxCarveMultiplier", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxCarveMultiplier), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxCarveMultiplier_MetaData), NewProp_MaxCarveMultiplier_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_SlingshotForcePerCharge = { "SlingshotForcePerCharge", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, SlingshotForcePerCharge), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SlingshotForcePerCharge_MetaData), NewProp_SlingshotForcePerCharge_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxLeashRadius = { "MaxLeashRadius", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxLeashRadius), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxLeashRadius_MetaData), NewProp_MaxLeashRadius_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinTowSpeed = { "MinTowSpeed", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MinTowSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MinTowSpeed_MetaData), NewProp_MinTowSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveSpeed = { "MaxCarveSpeed", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxCarveSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxCarveSpeed_MetaData), NewProp_MaxCarveSpeed_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_TowAcceleration = { "TowAcceleration", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, TowAcceleration), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TowAcceleration_MetaData), NewProp_TowAcceleration_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_OptimalCarveDot = { "OptimalCarveDot", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, OptimalCarveDot), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OptimalCarveDot_MetaData), NewProp_OptimalCarveDot_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_CarveTolerance = { "CarveTolerance", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, CarveTolerance), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CarveTolerance_MetaData), NewProp_CarveTolerance_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BungeeStiffness = { "BungeeStiffness", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BungeeStiffness), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BungeeStiffness_MetaData), NewProp_BungeeStiffness_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxBungeeAccel = { "MaxBungeeAccel", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, MaxBungeeAccel), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxBungeeAccel_MetaData), NewProp_MaxBungeeAccel_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_BungeeDamping = { "BungeeDamping", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, BungeeDamping), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BungeeDamping_MetaData), NewProp_BungeeDamping_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UTetherComponent_Statics::NewProp_WaterFrictionStrength = { "WaterFrictionStrength", nullptr, (EPropertyFlags)0x0020080000010001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UTetherComponent, WaterFrictionStrength), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_WaterFrictionStrength_MetaData), NewProp_WaterFrictionStrength_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UTetherComponent_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState_Underlying,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentTetherState,
@@ -410,7 +645,11 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UTetherCo
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_bIsTetherActive,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherTargetLocation,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForwardDragCoefficient,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveLeanAngle,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_UntetheredGripMultiplier,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_SpeedForMaxLean,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_PhysicsRoot,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxKeelGripForce,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverHeight,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverForce,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_HoverDamping,
@@ -430,12 +669,16 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UTetherCo
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_PitchDamping,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_YawDamping,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_RollDamping,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseSlack,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_AutoSpoolSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentRestLength,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinTetherLength,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ReelInSpeed,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherStrength,
-	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxStretchRatioClamp,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_AutoSpoolSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ManualSpoolSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherStiffness,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TetherDamping,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ForcedDespoolRate,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseSlack,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_ReelLockoutDuration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxStretchRatio,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_FoilLiftStrength,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinAlignmentForLift,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TensionStretchThreshold,
@@ -448,6 +691,22 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UTetherCo
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseLinearDamping,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_DragBurnDuration,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_WhipCrackSpeedMultiplier,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_SteerInterpSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CurrentCharge,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCharge,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BaseChargeRate,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveMultiplier,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_SlingshotForcePerCharge,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxLeashRadius,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MinTowSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxCarveSpeed,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_TowAcceleration,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_OptimalCarveDot,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_CarveTolerance,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BungeeStiffness,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_MaxBungeeAccel,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_BungeeDamping,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UTetherComponent_Statics::NewProp_WaterFrictionStrength,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_UTetherComponent_Statics::PropPointers) < 2048);
 UObject* (*const Z_Construct_UClass_UTetherComponent_Statics::DependentSingletons[])() = {
@@ -493,10 +752,10 @@ struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_
 		{ ETetherState_StaticEnum, TEXT("ETetherState"), &Z_Registration_Info_UEnum_ETetherState, CONSTRUCT_RELOAD_VERSION_INFO(FEnumReloadVersionInfo, 2374149683U) },
 	};
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UTetherComponent, UTetherComponent::StaticClass, TEXT("UTetherComponent"), &Z_Registration_Info_UClass_UTetherComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UTetherComponent), 2549832905U) },
+		{ Z_Construct_UClass_UTetherComponent, UTetherComponent::StaticClass, TEXT("UTetherComponent"), &Z_Registration_Info_UClass_UTetherComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UTetherComponent), 628173393U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_700138510(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_239961994(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::ClassInfo),
 	nullptr, 0,
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::EnumInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_TetherComponent_h_Statics::EnumInfo));

@@ -23,6 +23,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/../../../UE_5.5/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 4
@@ -32,23 +38,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Project.AutomationTool.executor": "Run",
-    ".NET Project.UnrealBuildTool.executor": "Run",
-    "C/C++ Project.VoidAngler_v00.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Project.AutomationTool.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.UnrealBuildTool.executor&quot;: &quot;Run&quot;,
+    &quot;C/C++ Project.VoidAngler_v00.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CppUnrealEngineOptionsId&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="C/C++ Project.VoidAngler_v00">
     <configuration name="UE5" type="CppProject" factoryName="C++ Project">
       <configuration_1 setup="1">
@@ -165,6 +172,42 @@
       <workItem from="1773043244963" duration="77000" />
       <workItem from="1773043373682" duration="1035000" />
       <workItem from="1773044527832" duration="516000" />
+      <workItem from="1773304889229" duration="694000" />
+      <workItem from="1773305612900" duration="1173000" />
+      <workItem from="1773306865506" duration="39000" />
+      <workItem from="1773306927204" duration="1296000" />
+      <workItem from="1773310160655" duration="10000" />
+      <workItem from="1773398741345" duration="2261000" />
+      <workItem from="1773475217603" duration="1516000" />
+      <workItem from="1773555848051" duration="3801000" />
+      <workItem from="1773647835984" duration="4930000" />
+      <workItem from="1773725828976" duration="11323000" />
+      <workItem from="1773822490162" duration="2385000" />
+      <workItem from="1773905734703" duration="5342000" />
+      <workItem from="1774027670164" duration="3892000" />
+      <workItem from="1774734171174" duration="5977000" />
+      <workItem from="1774805781463" duration="4479000" />
+      <workItem from="1774840825990" duration="652000" />
+      <workItem from="1775417622309" duration="4235000" />
+      <workItem from="1775878451928" duration="1867000" />
+      <workItem from="1775947044331" duration="9250000" />
+      <workItem from="1775986704473" duration="4120000" />
+      <workItem from="1776050259568" duration="610000" />
+      <workItem from="1776091614379" duration="3376000" />
+      <workItem from="1776103598084" duration="1649000" />
+      <workItem from="1776118562263" duration="602000" />
+      <workItem from="1776226933326" duration="900000" />
+      <workItem from="1776302935697" duration="1311000" />
+      <workItem from="1776586416887" duration="665000" />
+      <workItem from="1776667040595" duration="841000" />
+      <workItem from="1776833066900" duration="928000" />
+      <workItem from="1776931069848" duration="6189000" />
+      <workItem from="1777880379628" duration="3900000" />
+      <workItem from="1777965187574" duration="3424000" />
+      <workItem from="1778656545017" duration="69000" />
+      <workItem from="1778656984456" duration="20000" />
+      <workItem from="1778767540209" duration="9355000" />
+      <workItem from="1778803413452" duration="598000" />
     </task>
     <servers />
   </component>
@@ -192,5 +235,9 @@
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

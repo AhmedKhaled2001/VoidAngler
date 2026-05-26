@@ -64,6 +64,18 @@
     <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\BoardComponent.h">
       <Filter>Source\VoidAngler_v00\Character\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\CameraManager.cpp">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\CameraManager.h">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\PhysicsController.cpp">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\PhysicsController.h">
+      <Filter>Source\VoidAngler_v00\Character\Components</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\Character\Components\TetherComponent.cpp">
       <Filter>Source\VoidAngler_v00\Character\Components</Filter>
     </ClCompile>
@@ -73,15 +85,45 @@
     <Filter Include="Source\VoidAngler_v00\Enemy">
       <UniqueIdentifier>{C7A3FE8B-8966-35A6-958E-184AB3D280E0}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\BarracudaEnemy.cpp">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\BarracudaEnemy.h">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyBase.cpp">
       <Filter>Source\VoidAngler_v00\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyBase.h">
       <Filter>Source\VoidAngler_v00\Enemy</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyParent.cpp">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\Enemy\EnemyParent.h">
+      <Filter>Source\VoidAngler_v00\Enemy</Filter>
+    </ClCompile>
     <Filter Include="Source\VoidAngler_v00\GameBackend">
       <UniqueIdentifier>{1FA83557-D134-3ECF-8CF6-99692041D615}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\LevelDeck.cpp">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\LevelDeck.h">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\Targetable.cpp">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\Targetable.h">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\ThemeData.cpp">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\ThemeData.h">
+      <Filter>Source\VoidAngler_v00\GameBackend</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\GameBackend\VoidAnglerGameMode.cpp">
       <Filter>Source\VoidAngler_v00\GameBackend</Filter>
     </ClCompile>
@@ -104,6 +146,24 @@
       <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\ChunkManager.h">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\LevelDirector.cpp">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\LevelDirector.h">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\OceanManager.cpp">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\OceanManager.h">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\ProceduralLevelGenerator.cpp">
+      <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\ProceduralLevelGenerator.h">
       <Filter>Source\VoidAngler_v00\WorldGeneration</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\VoidAngler_v00\WorldGeneration\WorldChunk.cpp">

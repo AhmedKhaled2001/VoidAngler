@@ -10,7 +10,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeBoardComponent() {}
 
 // Begin Cross Module References
-ENGINE_API UClass* Z_Construct_UClass_UStaticMeshComponent();
+ENGINE_API UClass* Z_Construct_UClass_UBoxComponent();
 UPackage* Z_Construct_UPackage__Script_VoidAngler_v00();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_UBoardComponent();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_UBoardComponent_NoRegister();
@@ -31,10 +31,7 @@ struct Z_Construct_UClass_UBoardComponent_Statics
 	static constexpr UECodeGen_Private::FMetaDataPairParam Class_MetaDataParams[] = {
 		{ "BlueprintSpawnableComponent", "" },
 		{ "ClassGroupNames", "Custom" },
-#if !UE_BUILD_SHIPPING
-		{ "Comment", "/**\n * \n */" },
-#endif
-		{ "HideCategories", "Object Activation Components|Activation Trigger" },
+		{ "HideCategories", "Object LOD Lighting TextureStreaming Object LOD Lighting TextureStreaming Activation Components|Activation Trigger VirtualTexture" },
 		{ "IncludePath", "Character/Components/BoardComponent.h" },
 		{ "ModuleRelativePath", "Character/Components/BoardComponent.h" },
 	};
@@ -46,7 +43,7 @@ struct Z_Construct_UClass_UBoardComponent_Statics
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
 UObject* (*const Z_Construct_UClass_UBoardComponent_Statics::DependentSingletons[])() = {
-	(UObject* (*)())Z_Construct_UClass_UStaticMeshComponent,
+	(UObject* (*)())Z_Construct_UClass_UBoxComponent,
 	(UObject* (*)())Z_Construct_UPackage__Script_VoidAngler_v00,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_UBoardComponent_Statics::DependentSingletons) < 16);
@@ -85,10 +82,10 @@ UBoardComponent::~UBoardComponent() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UBoardComponent, UBoardComponent::StaticClass, TEXT("UBoardComponent"), &Z_Registration_Info_UClass_UBoardComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UBoardComponent), 118296376U) },
+		{ Z_Construct_UClass_UBoardComponent, UBoardComponent::StaticClass, TEXT("UBoardComponent"), &Z_Registration_Info_UClass_UBoardComponent, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UBoardComponent), 667616163U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_4087936791(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_3325746601(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_BoardComponent_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

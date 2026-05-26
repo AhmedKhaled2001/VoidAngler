@@ -26,10 +26,20 @@ protected:
 	UPROPERTY()
 	AActor* CurrentTargetActor = nullptr;
 	FVector LastCheckpointLocation;
-
-	// How low is too low? (World Z)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
+	class UBoxComponent* RamHitbox;
+	
 	UPROPERTY(EditAnywhere, Category = "Respawn")
 	float KillZThreshold = -5000.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat|Ram")
+	float LethalSpeedThreshold = 4000.0f; 
+
+	// Must be a UFUNCTION to bind to the dynamic delegate
+	UFUNCTION()
+	void OnRamHitboxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+		const FHitResult& SweepResult);
 
 	void Edge(float Value);
 	void Winch(float Value);
@@ -39,15 +49,24 @@ private:
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UStaticMeshComponent* CharacterMesh;
 	UPROPERTY(VisibleAnywhere, Category="Components")
-	UBoardComponent* BoardComponent;
+	UBoardComponent* BoardComponentt;
+	UPROPERTY(VisibleAnywhere, Category="Components")
+	class UCameraManager* CameraManager;
+	UPROPERTY(VisibleAnywhere, Category="Components")
+	class UStaticMeshComponent* BoardMesh;
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UTetherComponent* TetherComponent;
+
+	UPROPERTY(VisibleAnywhere, Category="Components")
+	class UPhysicsController* PhysicsControllerr;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UCameraComponent* Camera;
 	void FireTether();
+	void SprintPressed();
+	void SprintReleased();
 
 	
 	UPROPERTY(EditAnywhere, Category = "Aim Assist")

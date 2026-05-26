@@ -16,7 +16,8 @@ class VOIDANGLER_V00_API AProceduralLevelGenerator : public AActor
 public: 
 	AProceduralLevelGenerator();
 	virtual void Tick(float DeltaTime) override;
-
+	FVector CurrentTrackDirection;
+	FVector GetFlowDirectionAtLocation(const FVector& QueryLocation, float LookaheadDistance) const;
 protected:
 	virtual void BeginPlay() override;
 
@@ -25,7 +26,8 @@ protected:
 	// The active Theme Data Asset (Alexandria, Abyss, etc.) Drag your DataAsset here in the editor!
 	UPROPERTY(EditAnywhere, Category = "Theme")
 	UThemeData* CurrentTheme;
-
+	UPROPERTY()
+	TArray<FVector> TrackCenters;
 	UPROPERTY(EditAnywhere, Category = "Generation Metrics|Wander")
 	float MaxWanderAngle = 10.0f;
 
@@ -71,7 +73,6 @@ private:
 	// The worker functions we will build in Tasks 1.2 and 1.3
 	void SpawnNextRow();
 	void CleanupGarbage();
-	FVector CurrentTrackDirection;
 
 	// We step this forward every row to read a new value from the Perlin Noise math
 	float NoiseStep;

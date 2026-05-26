@@ -9,8 +9,12 @@
 #include "Components/TetherComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/CameraManager.h"
+#include "Components/PhysicsController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "VoidAngler_v00/Enemy/EnemyParent.h"
 #include "VoidAngler_v00/Traversal/AnchorPoint.h"
 
 // Sets default values
@@ -18,16 +22,39 @@ APlayerCharacter::APlayerCharacter()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	BoardComponent = CreateDefaultSubobject<UBoardComponent>(TEXT("BoardComponent"));
-	RootComponent = BoardComponent;
+	BoardComponentt = CreateDefaultSubobject<UBoardComponent>(TEXT("BoardComponentt"));
+	RootComponent = BoardComponentt;
+    BoardMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BoardMesh"));
+	BoardMesh->SetupAttachment(RootComponent);
 
 	CharacterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CharacterMesh"));
-	CharacterMesh->SetupAttachment(RootComponent);
+	CharacterMesh->SetupAttachment(BoardMesh);
 	CharacterMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	TetherComponent = CreateDefaultSubobject<UTetherComponent>(TEXT("TetherEngineComponent"));
+	PhysicsControllerr = CreateDefaultSubobject<UPhysicsController>(TEXT("PhysicsEngineControllerrss"));
+	CameraManager = CreateDefaultSubobject<UCameraManager>(TEXT("CameraManager"));
+	RamHitbox = CreateDefaultSubobject<UBoxComponent>(TEXT("RamHitbox"));
+	// Attach to your physics root or board mesh
+	RamHitbox->SetupAttachment(BoardComponentt); 
+    
+	// Push it forward to the nose of the board. 
+	// (Adjust the X value in Blueprints later to fit your specific mesh)
+	RamHitbox->SetRelativeLocation(FVector(150.0f, 0.0f, 0.0f)); 
+    
+	// Make it wide enough to be forgiving, but thin so it acts like a blade
+	RamHitbox->SetBoxExtent(FVector(20.0f, 80.0f, 20.0f));
 
-
+	// --- STRICT COLLISION PROFILING ---
+	// Turn off physics simulation for this box; it is strictly a trigger.
+	RamHitbox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    
+	// Ignore EVERYTHING by default to save CPU
+	RamHitbox->SetCollisionResponseToAllChannels(ECR_Ignore);
+    
+	// Only overlap with Pawns (Your enemies). 
+	// If you made a custom trace channel for enemies later, use that instead.
+	RamHitbox->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent); // Follows the Board
 	SpringArm->bUsePawnControlRotation = true; 
@@ -52,71 +79,145 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	if (RamHitbox)
+	{
+		RamHitbox->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnRamHitboxOverlap);
+	}
 }
+void APlayerCharacter::OnRamHitboxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// Ignore self and null pointers
+	if (!OtherActor || OtherActor == this) return;
 
+	// We only care if we hit an enemy. 
+	// (Cast to your base class. If it fails, it's not an enemy, so ignore it.)
+	AEnemyParent* HitEnemy = Cast<AEnemyParent>(OtherActor);
+	if (!HitEnemy) return;
+
+	// Safety check on your physics root
+	if (!BoardComponentt) return;
+
+	// Calculate current momentum
+	float CurrentSpeed = BoardComponentt->GetComponentVelocity().Size();
+
+	// THE VELOCITY GATE
+	if (CurrentSpeed >= LethalSpeedThreshold)
+	{
+		if (OtherActor->Implements<UTargetable>())
+		{
+			ITargetable* Target = Cast<ITargetable>(OtherActor);
+			if (Target)
+			{
+				// Tell the object it just got hit at Mach 2. Let it decide what to do.
+				Target->OnLethalStrike();
+			}
+			// If we were tethered to it, let go
+			if (TetherComponent && TetherComponent->GetAttachedActor() == OtherActor) 
+			{
+				TetherComponent->DetachTether();
+			}
+		}
+	}
+	else
+	{
+		if (TetherComponent && TetherComponent->GetAttachedActor() == OtherActor) 
+		{
+			TetherComponent->DetachTether();
+		}
+		// Player bumped the enemy, but wasn't going fast enough. 
+		// In the future, this might damage the player or cause a stumble.
+		FString Msg = FString::Printf(TEXT("GLANCING BLOW. Too slow: %.2f"), CurrentSpeed);
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, Msg);
+	}
+}
 void APlayerCharacter::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-	if (BoardComponent && TetherComponent)
+	if (BoardComponentt && TetherComponent && PhysicsControllerr && CameraManager)
 	{
-		TetherComponent->Initalize(BoardComponent);
+		PhysicsControllerr->InitializeComponent(BoardComponentt, BoardMesh);
+		TetherComponent->Initalize(BoardComponentt);
+		CameraManager->Initialize(SpringArm, Camera, PhysicsControllerr);
 	}
 }
 
 void APlayerCharacter::Edge(float Value)
 {
-	if (TetherComponent)
+	if (TetherComponent && PhysicsControllerr)
 	{
 		TetherComponent->SetEdgeInput(Value);
+		PhysicsControllerr ->SetSteeringInput(Value);
 	}
 }
 
 void APlayerCharacter::Winch(float Value)
 {
-	if (TetherComponent)
+	if (TetherComponent && PhysicsControllerr)
 	{
 		TetherComponent->SetReelInput(Value);
+		//PhysicsControllerr ->SetSprintInput(Value);
 	}
 }
 
 void APlayerCharacter::BrakeReleased()
 {
-	if (TetherComponent)
+	if (TetherComponent && PhysicsControllerr)
 	{
 		TetherComponent->SetBraking(false);
+		PhysicsControllerr ->SetSkidInput(false);
+		
 	}
 }
 
 void APlayerCharacter::Brake()
 {
-	if (TetherComponent)
+	if (TetherComponent && PhysicsControllerr)
 	{
 		TetherComponent->SetBraking(true);
+		PhysicsControllerr ->SetSkidInput(true);
 	}
 }
 
 void APlayerCharacter::FireTether()
 {
-	// To be continued
 	if (!TetherComponent) return;
-	if (TetherComponent->CurrentTetherState != ETetherState::Inactive)
+	if (!PhysicsControllerr) return;
+
+	// 1. Are we already attached?
+	if (PhysicsControllerr->IsTetherActive()) 
 	{
-		TetherComponent->EvaluateRhythmInput();
-		TetherComponent->DetachTether();
+		// We are hooked. Pressing fire again means RELEASE THE SLINGSHOT.
+		PhysicsControllerr->DetachAndSlingshot();
 		return;
 	}
-	if (CurrentTargetActor)
+
+	// 2. We are NOT attached. The player is trying to cast the line.
+	if (IsValid(CurrentTargetActor))
 	{
-		// We hit something valid!
-		// For now, we grab the location. Later we will pass the Actor pointer for moving targets.
-		TetherComponent->EvaluateRhythmInput();
-		TetherComponent->SetTetherTargetLocation(CurrentTargetActor ,CurrentTargetActor->GetActorLocation());
+		// We hit a valid anchor! Tell the physics controller to grab it.
+		PhysicsControllerr->AttachToAnchor(CurrentTargetActor);
 	}
 	else
 	{
-		// Missed everything
-		TetherComponent->DetachTether();
+		// We fired at nothing. 
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Red, TEXT("Tether Missed!"));
+	}
+	
+}
+
+void APlayerCharacter::SprintPressed()
+{
+	if (PhysicsControllerr)
+	{
+		PhysicsControllerr->SetSprintInput(true);
+	}
+}
+
+void APlayerCharacter::SprintReleased()
+{
+	if (PhysicsControllerr)
+	{
+		PhysicsControllerr->SetSprintInput(false);
 	}
 }
 
@@ -131,7 +232,7 @@ AActor* APlayerCharacter::FindBestTetherTarget()
     // We scan for WorldStatic (Anchors) and PhysicsBody (Beasts/Debris)
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_WorldStatic)); 
     ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_PhysicsBody)); 
-
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn)); 
     TArray<AActor*> ActorsToIgnore;
     ActorsToIgnore.Add(this); // Don't hit yourself
 
@@ -162,7 +263,7 @@ AActor* APlayerCharacter::FindBestTetherTarget()
         if (!HitActor) continue;
 
         // Optional: Add specific class checks here if you have non-target debris
-        if (!HitActor->IsA<AAnchorPoint>() && !HitActor->IsA<AEnemyBase>()) continue;
+        if (!Cast<ITargetable>(HitActor)) continue;
 
         // A. Calculate Direction Score (Dot Product)
         // How close is this object to the center of my screen?
@@ -218,10 +319,10 @@ void APlayerCharacter::Respawn()
     
 	// 3. Reset Physics
 	// Stop all momentum.
-	if (BoardComponent)
+	if (BoardComponentt)
 	{
-		BoardComponent->SetPhysicsLinearVelocity(FVector::ZeroVector);
-		BoardComponent->SetPhysicsAngularVelocityInRadians(FVector::ZeroVector);
+		BoardComponentt->SetPhysicsLinearVelocity(FVector::ZeroVector);
+		BoardComponentt->SetPhysicsAngularVelocityInRadians(FVector::ZeroVector);
         
 		// Reset Rotation to face forward? 
 		// Ideally, face the direction of the track, but Identity is safe for now.
@@ -256,21 +357,18 @@ void APlayerCharacter::Tick(float DeltaTime)
 		// A. Turn OFF the old target (if it existed)
 		if (CurrentTargetActor)
 		{
-			AAnchorPoint* OldAnchor = Cast<AAnchorPoint>(CurrentTargetActor);
-			if (OldAnchor) 
+			ITargetable* OldTargetable = Cast<ITargetable>(CurrentTargetActor);
+			if (OldTargetable) 
 			{
-				OldAnchor->OnTargeted(false); // Turn light off (Cyan/Yellow)
+				OldTargetable->OnTargeted(false); // Turn light off (Cyan/Yellow)
 			}
 		}
 
 		// B. Turn ON the new target (if found)
 		if (NewTarget)
 		{
-			AAnchorPoint* NewAnchor = Cast<AAnchorPoint>(NewTarget);
-			if (NewAnchor) 
-			{
-				NewAnchor->OnTargeted(true); // Turn light RED (Locked)
-			}
+			ITargetable* NewTargetable = Cast<ITargetable>(NewTarget);
+			if (NewTargetable) NewTargetable->OnTargeted(true);
 		}
 
 		// C. Update Tracking Variable
@@ -288,11 +386,13 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		PlayerInputComponent->BindAction("FireTether", IE_Pressed,this, &APlayerCharacter::FireTether);
 		PlayerInputComponent->BindAxis("Turn", this, &APlayerCharacter::Turn);
 		PlayerInputComponent->BindAxis("LookUp", this, &APlayerCharacter::LookUp);
-		//PlayerInputComponent->BindAxis("Edge", this, &APlayerCharacter::Edge);
+		PlayerInputComponent->BindAxis("Edge", this, &APlayerCharacter::Edge);
 		PlayerInputComponent->BindAxis("Reel", this, &APlayerCharacter::Winch);
 		PlayerInputComponent->BindAction("Brake", IE_Pressed,this, &APlayerCharacter::Brake);
 		PlayerInputComponent->BindAction("Brake",IE_Released, this, &APlayerCharacter::BrakeReleased);
-		
+		PlayerInputComponent->BindAction("Sprint",IE_Pressed, this, &APlayerCharacter::SprintPressed);
+		PlayerInputComponent->BindAction("Sprint",IE_Released, this, &APlayerCharacter::SprintReleased);
+						
 	}
 
 }

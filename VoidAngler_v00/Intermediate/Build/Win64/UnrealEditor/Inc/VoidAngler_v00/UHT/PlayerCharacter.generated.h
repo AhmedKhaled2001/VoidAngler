@@ -9,10 +9,17 @@
 #include "UObject/ScriptMacros.h"
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
+class AActor;
+class UPrimitiveComponent;
+struct FHitResult;
 #ifdef VOIDANGLER_V00_PlayerCharacter_generated_h
 #error "PlayerCharacter.generated.h already included, missing '#pragma once' in PlayerCharacter.h"
 #endif
 #define VOIDANGLER_V00_PlayerCharacter_generated_h
+
+#define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execOnRamHitboxOverlap);
+
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_INCLASS_NO_PURE_DECLS \
 private: \
@@ -39,6 +46,7 @@ public: \
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_GENERATED_BODY \
 PRAGMA_DISABLE_DEPRECATION_WARNINGS \
 public: \
+	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
 	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_INCLASS_NO_PURE_DECLS \
 	FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_ENHANCED_CONSTRUCTORS \
 private: \

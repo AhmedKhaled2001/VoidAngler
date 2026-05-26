@@ -58,10 +58,20 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Aerodynamics")
     float ForwardDragCoefficient = 0.0005f;
     float CurrentTetherLength = 0.0f;
+    // The maximum angle (in degrees) the board will lean when carving at full speed.
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Visuals")
+    float MaxCarveLeanAngle = 60.0f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Aerodynamics")
+    float UntetheredGripMultiplier = 0.05f;
+    // The lateral speed required to reach the maximum lean angle. 
+    // Lower = leans easier. Higher = takes massive speed to lean fully.
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Visuals")
+    float SpeedForMaxLean = 1500.0f;
     
     UPROPERTY()
     UPrimitiveComponent* PhysicsRoot;
-
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Aerodynamics")
+    float MaxKeelGripForce = 150000.0f;
     // --- HOVER SYSTEM ---
     UPROPERTY(EditAnywhere, Category = "Suspension")
     float HoverHeight = 150.0f; 
@@ -109,21 +119,45 @@ protected:
     
     FVector DesiredHeading = FVector::ZeroVector;
     float EdgeInput = 0.0f;
+    // --- 1. STATE & SPOOLING ---
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Tether|State")
+    float CurrentRestLength;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Settings", meta = (ClampMin = "10.0"))
+    float MinTetherLength = 50.0f; 
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Spooling")
+    float AutoSpoolSpeed = 3000.0f; 
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Spooling")
+    float ManualSpoolSpeed = 800.0f; 
+
+    bool bIsAutoSpooling = false;
+    float TargetAutoSpoolLength = 0.0f;
+
+    // --- 2. THE PD CONTROLLER (PHYSICS) ---
+    // NOTE: Because we are no longer ignoring mass, these numbers need to be BIG (e.g., 50000.0f)
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Physics")
+    float TetherStiffness = 50000.0f; 
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Physics")
+    float TetherDamping = 5000.0f; 
+
+    // --- 3. THE DRAG PENALTY (MECHANICS) ---
+    // The force threshold where the reel fails and gives line back to the fish
+    
+
+    // How fast the line violently rips out when the drag fails
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Mechanics")
+    float ForcedDespoolRate = 1500.0f;
     // --- TETHER CORE (V1 Hybrid) ---
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
     float BaseSlack = 800.0f;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
-    float AutoSpoolSpeed = 3000.0f;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
-    float MinTetherLength = 200.0f; 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
-    float ReelInSpeed = 100.0f;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
-    float TetherStrength = 600000.0f;
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Core")
-    float MaxStretchRatioClamp = 8.0f;
-    
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Mechanics")
+    float ReelLockoutDuration = 1.5f;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Mechanics")
+    float MaxStretchRatio = 1.25f;
+    float ReelLockoutTimer = 0.0f;
     // --- TETHER SURFING ---
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Surfing")
     float FoilLiftStrength = 800000.0f;
@@ -151,7 +185,60 @@ protected:
     float DragBurnDuration = 1.5f;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tether|Rhythm")
     float WhipCrackSpeedMultiplier = 0.5f;
+    UPROPERTY(EditAnywhere, Category = "Hoverboard|Steering")
+    float SteerInterpSpeed = 5.0f;
+    // --- ARCADE POWER-WAKE SYSTEM (Analog Carving) ---
 
+    // The current stored kinetic energy from carving against the tether
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PowerWake")
+    float CurrentCharge = 0.0f;
+
+    // The maximum amount of charge the player can hold
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float MaxCharge = 100.0f;
+
+    // The baseline rate charge builds when circling the anchor perfectly (Dot Product = 0)
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float BaseChargeRate = 4.0f;
+
+    // Multiplier applied when the player steers aggressively AWAY from the anchor
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float MaxCarveMultiplier = 3.0f;
+
+    // The massive forward impulse applied upon release (Multiplied by CurrentCharge)
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float SlingshotForcePerCharge = 2000.0f;
+
+    // The rigid maximum length of the tether. The player physically cannot exceed this distance.
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float MaxLeashRadius = 3000.0f;
+    // THE SKI-BOAT: The minimum speed the tether will drag you toward the anchor
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float MinTowSpeed = 3000.0f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float MaxCarveSpeed = 4500.0f;
+    // How aggressively the tether accelerates you to match the Tow Speed
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake")
+    float TowAcceleration = 5.0f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Carving")
+    float OptimalCarveDot = -0.5f;
+
+    // How far from the optimal angle the player can be before the charge drops to zero.
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Carving")
+    float CarveTolerance = 0.5f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Movement")
+    float BungeeStiffness = 15.0f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Movement")
+    float MaxBungeeAccel = 15000.0f;
+    // The shock absorber. Prevents the bungee from bouncing you infinitely like a yo-yo.
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Movement")
+    float BungeeDamping = 8.0f;
+    UPROPERTY(EditDefaultsOnly, Category = "PowerWake|Movement")
+    float WaterFrictionStrength = 5000.0f;
+
+public:
+    // Calculates the final charge and applies the forward impulse upon detach
+    void ExecuteSlingshotRelease();
 private:
     float WinchInputValue = 0.0f; // Unified input variable
     float SimulatedTension = 0.0f;
@@ -163,4 +250,10 @@ private:
     void ApplyControl();
     void ApplyTetherForces();
     void EndDragBurn();
+    
+    // The smoothed value currently driving the physics
+    float CurrentSteerCommand = 0.0f;
+    
+    // How fast the board leans into the carve (tune this in Blueprints, try 5.0 to start)
+    
 };

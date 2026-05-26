@@ -12,6 +12,39 @@ AProceduralLevelGenerator::AProceduralLevelGenerator()
 	PrimaryActorTick.bCanEverTick = true;
 
 }
+
+FVector AProceduralLevelGenerator::GetFlowDirectionAtLocation(const FVector& QueryLocation,
+	float LookaheadDistance) const
+{
+	if (TrackCenters.Num() < 2) 
+	{
+		return CurrentTrackDirection; // Fallback if the array is empty
+	}
+
+	// 1. Find the breadcrumb closest to the query location
+	int32 ClosestIndex = 0;
+	float MinDistSq = MAX_flt;
+
+	for (int32 i = 0; i < TrackCenters.Num(); ++i)
+	{
+		float DistSq = FVector::DistSquared(QueryLocation, TrackCenters[i]);
+		if (DistSq < MinDistSq)
+		{
+			MinDistSq = DistSq;
+			ClosestIndex = i;
+		}
+	}
+
+	// 2. Look ahead by X units to find the target breadcrumb
+	// We divide LookaheadDistance by RowInterval to know how many array indices to skip
+	int32 IndexOffset = FMath::Max(1, FMath::CeilToInt(LookaheadDistance / RowInterval));
+	int32 TargetIndex = FMath::Min(ClosestIndex + IndexOffset, TrackCenters.Num() - 1);
+
+	// 3. Get the vector between them
+	FVector LocalFlowDir = (TrackCenters[TargetIndex] - TrackCenters[ClosestIndex]).GetSafeNormal();
+	return LocalFlowDir;
+}
+
 void AProceduralLevelGenerator::BeginPlay()
 {
 	Super::BeginPlay();
@@ -78,7 +111,7 @@ TSubclassOf<AActor> AProceduralLevelGenerator::GetRandomClassFromArray(const TAr
 void AProceduralLevelGenerator::SpawnNextRow()
 {
 	if (!PlayerRef || !CurrentTheme) return;
-
+	
     // --- 1. THE BRAIN (PERLIN WANDER) ---
     // Get a smooth, organic random number between -1.0 and 1.0
     float PerlinValue = FMath::PerlinNoise1D(NoiseStep);
@@ -99,7 +132,7 @@ void AProceduralLevelGenerator::SpawnNextRow()
 
     // Push the cursor forward along the NEW curved direction
     FVector RowCenter = LastRowLocation + (CurrentTrackDirection * RowInterval);
-
+	TrackCenters.Add(RowCenter);
     // --- 3. SPAWN THE ANCHORS ---
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -111,7 +144,7 @@ void AProceduralLevelGenerator::SpawnNextRow()
     	FVector AnchorLoc = RowCenter + (TrackRight * RandomPlayableOffset);
     	AnchorLoc.Z = 0.0f; 
 
-    	AActor* NewAnchor = GetWorld()->SpawnActor<AActor>(AnchorToSpawn, AnchorLoc, FRotator::ZeroRotator, SpawnParams);
+    	AActor* NewAnchor = GetWorld()->SpawnActor<AActor>(AnchorToSpawn, AnchorLoc + FVector(0,0,200), FRotator::ZeroRotator, SpawnParams);
     	if (NewAnchor) ActiveEnvironmentAssets.Add(NewAnchor);
     }
 
@@ -150,6 +183,21 @@ void AProceduralLevelGenerator::CleanupGarbage()
 		{
 			Asset->Destroy();               
 			ActiveEnvironmentAssets.RemoveAt(i); 
+		}
+	}
+	while (TrackCenters.Num() > 2)
+	{
+		// If the oldest breadcrumb is way behind the player, delete it
+		FVector DirToCenter = (TrackCenters[0] - PlayerLoc).GetSafeNormal();
+		float ForwardDot = FVector::DotProduct(BoardNose, DirToCenter);
+        
+		if (ForwardDot < -0.1f && FVector::Dist(PlayerLoc, TrackCenters[0]) > DespawnDistanceBehind)
+		{
+			TrackCenters.RemoveAt(0);
+		}
+		else
+		{
+			break; // The oldest point is still in front of us, stop deleting
 		}
 	}
 }

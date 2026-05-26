@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "VoidAngler_v00/GameBackend/Targetable.h"
 #include "AnchorPoint.generated.h"
 
 UCLASS()
-class VOIDANGLER_V00_API AAnchorPoint : public AActor
+class VOIDANGLER_V00_API AAnchorPoint : public AActor, public ITargetable
 {
 	GENERATED_BODY()
 	
@@ -34,14 +35,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Visuals")
 	FLinearColor LockedColor = FLinearColor::Red;
 
-
 	
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	void OnTargeted(bool bIsTargeted);
-
+	virtual void OnTargeted(bool bIsTargeted) override;
+	virtual void OnHooked() override;
+	virtual void OnReleased() override;
+	virtual ETargetWeightClass GetTargetWeightClass() const override;
 	bool IsCheckpoint() const { return bIsCheckpoint; }
+	virtual void AddTowForce(const FVector& TowForce) override {}
+	virtual void OnLethalStrike() override {}
+	virtual float GetStaminaRatio() const override { return 1.0f; }
+	virtual void RegisterPlayerTension(float TensionForce) override{}
 
 };

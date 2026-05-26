@@ -10,6 +10,7 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 void EmptyLinkFunctionForGeneratedCodeProceduralLevelGenerator() {}
 
 // Begin Cross Module References
+COREUOBJECT_API UScriptStruct* Z_Construct_UScriptStruct_FVector();
 ENGINE_API UClass* Z_Construct_UClass_AActor();
 ENGINE_API UClass* Z_Construct_UClass_AActor_NoRegister();
 UPackage* Z_Construct_UPackage__Script_VoidAngler_v00();
@@ -43,6 +44,9 @@ struct Z_Construct_UClass_AProceduralLevelGenerator_Statics
 #if !UE_BUILD_SHIPPING
 		{ "ToolTip", "The active Theme Data Asset (Alexandria, Abyss, etc.) Drag your DataAsset here in the editor!" },
 #endif
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TrackCenters_MetaData[] = {
+		{ "ModuleRelativePath", "WorldGeneration/ProceduralLevelGenerator.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_MaxWanderAngle_MetaData[] = {
 		{ "Category", "Generation Metrics|Wander" },
@@ -130,6 +134,8 @@ struct Z_Construct_UClass_AProceduralLevelGenerator_Statics
 	};
 #endif // WITH_METADATA
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CurrentTheme;
+	static const UECodeGen_Private::FStructPropertyParams NewProp_TrackCenters_Inner;
+	static const UECodeGen_Private::FArrayPropertyParams NewProp_TrackCenters;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_MaxWanderAngle;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_WanderFrequency;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_SpawnDistanceAhead;
@@ -150,6 +156,8 @@ struct Z_Construct_UClass_AProceduralLevelGenerator_Statics
 	static const UECodeGen_Private::FClassParams ClassParams;
 };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_CurrentTheme = { "CurrentTheme", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, CurrentTheme), Z_Construct_UClass_UThemeData_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentTheme_MetaData), NewProp_CurrentTheme_MetaData) };
+const UECodeGen_Private::FStructPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_TrackCenters_Inner = { "TrackCenters", nullptr, (EPropertyFlags)0x0000000000000000, UECodeGen_Private::EPropertyGenFlags::Struct, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, 0, Z_Construct_UScriptStruct_FVector, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_TrackCenters = { "TrackCenters", nullptr, (EPropertyFlags)0x0020080000000000, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, TrackCenters), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TrackCenters_MetaData), NewProp_TrackCenters_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_MaxWanderAngle = { "MaxWanderAngle", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, MaxWanderAngle), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_MaxWanderAngle_MetaData), NewProp_MaxWanderAngle_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_WanderFrequency = { "WanderFrequency", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, WanderFrequency), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_WanderFrequency_MetaData), NewProp_WanderFrequency_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_SpawnDistanceAhead = { "SpawnDistanceAhead", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, SpawnDistanceAhead), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SpawnDistanceAhead_MetaData), NewProp_SpawnDistanceAhead_MetaData) };
@@ -164,6 +172,8 @@ const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_AProceduralLev
 const UECodeGen_Private::FArrayPropertyParams Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_ActiveEnvironmentAssets = { "ActiveEnvironmentAssets", nullptr, (EPropertyFlags)0x0040000000000000, UECodeGen_Private::EPropertyGenFlags::Array, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(AProceduralLevelGenerator, ActiveEnvironmentAssets), EArrayPropertyFlags::None, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ActiveEnvironmentAssets_MetaData), NewProp_ActiveEnvironmentAssets_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_AProceduralLevelGenerator_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_CurrentTheme,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_TrackCenters_Inner,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_TrackCenters,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_MaxWanderAngle,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_WanderFrequency,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_AProceduralLevelGenerator_Statics::NewProp_SpawnDistanceAhead,
@@ -218,10 +228,10 @@ AProceduralLevelGenerator::~AProceduralLevelGenerator() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_ProceduralLevelGenerator_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_AProceduralLevelGenerator, AProceduralLevelGenerator::StaticClass, TEXT("AProceduralLevelGenerator"), &Z_Registration_Info_UClass_AProceduralLevelGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AProceduralLevelGenerator), 2347867043U) },
+		{ Z_Construct_UClass_AProceduralLevelGenerator, AProceduralLevelGenerator::StaticClass, TEXT("AProceduralLevelGenerator"), &Z_Registration_Info_UClass_AProceduralLevelGenerator, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(AProceduralLevelGenerator), 130633487U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_ProceduralLevelGenerator_h_3024103505(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_ProceduralLevelGenerator_h_3837352800(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_ProceduralLevelGenerator_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_WorldGeneration_ProceduralLevelGenerator_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

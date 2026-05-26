@@ -63,3 +63,18 @@ void AAnchorPoint::OnTargeted(bool bIsTargeted)
 	}
 }
 
+void AAnchorPoint::OnHooked()
+{
+	
+}
+
+void AAnchorPoint::OnReleased()
+{
+	
+}
+
+ETargetWeightClass AAnchorPoint::GetTargetWeightClass() const
+{
+	return ETargetWeightClass::StaticAnchor;
+}
+

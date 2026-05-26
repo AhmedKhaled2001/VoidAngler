@@ -20,7 +20,13 @@ void UBoardComponent::OnCreatePhysicsState()
 	SetCollisionProfileName(TEXT("PhysicsActor"));
 	SetEnableGravity(true);
 	
-	SetLinearDamping(0.05f);
+	GetBodyInstance()->bLockXRotation = true; 
+	GetBodyInstance()->bLockYRotation = true; 
+	GetBodyInstance()->bLockZRotation = true; // Add this!
+
+	GetBodyInstance()->bOverrideMass = true;
+	GetBodyInstance()->SetMassOverride(100.0f);
+	SetLinearDamping(0.0f);
 	SetAngularDamping(1.0f);
 	SetSimulatePhysics(true);
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("BoardComponent::OnCreatePhysicsState"));
