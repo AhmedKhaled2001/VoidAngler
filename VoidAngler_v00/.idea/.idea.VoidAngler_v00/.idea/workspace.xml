@@ -26,6 +26,10 @@
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/../../../UE_5.5/Engine/Source/Runtime/Engine/Classes/Components/PrimitiveComponent.h" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -44,8 +48,10 @@
     &quot;.NET Project.UnrealBuildTool.executor&quot;: &quot;Run&quot;,
     &quot;C/C++ Project.VoidAngler_v00.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -90,6 +96,18 @@
         <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
         <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/VoidAngler_v00.vcxproj" />
       </configuration_1>
+      <configuration_2 setup="1">
+        <option name="CONFIGURATION" value="Win64_x64_Development_Editor" />
+        <option name="PLATFORM" value="x64" />
+        <option name="CURRENT_LAUNCH_PROFILE" value="Local" />
+        <option name="EXE_PATH" value="$(LocalDebuggerCommand)" />
+        <option name="PROGRAM_PARAMETERS" value="$(LocalDebuggerCommandArguments)" />
+        <option name="WORKING_DIRECTORY" value="$(LocalDebuggerWorkingDirectory)" />
+        <option name="PASS_PARENT_ENVS" value="1" />
+        <option name="USE_EXTERNAL_CONSOLE" value="0" />
+        <option name="TERMINAL_INTERACTION_BEHAVIOR" value="AUTO_DETECT" />
+        <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/VoidAngler_v00.vcxproj" />
+      </configuration_2>
       <option name="DEFAULT_PROJECT_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/VoidAngler_v00.vcxproj" />
       <option name="PROJECT_FILE_PATH" value="$PROJECT_DIR$/Intermediate/ProjectFiles/VoidAngler_v00.vcxproj" />
       <option name="AUTO_SELECT_PRIORITY" value="0" />
@@ -102,14 +120,12 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
       <option name="AUTO_ATTACH_CHILDREN" value="0" />
-      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../UE_5.5/Engine/Source/Programs/AutomationTool/AutomationTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -125,14 +141,12 @@
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="" />
       <option name="PASS_PARENT_ENVS" value="1" />
-      <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="ENV_FILE_PATHS" value="" />
       <option name="REDIRECT_INPUT_PATH" value="" />
-      <option name="PTY_MODE" value="Auto" />
+      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="USE_MONO" value="0" />
       <option name="RUNTIME_ARGUMENTS" value="" />
       <option name="AUTO_ATTACH_CHILDREN" value="0" />
-      <option name="MIXED_MODE_DEBUG" value="0" />
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/../../../UE_5.5/Engine/Source/Programs/UnrealBuildTool/UnrealBuildTool.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
@@ -208,6 +222,7 @@
       <workItem from="1778656984456" duration="20000" />
       <workItem from="1778767540209" duration="9355000" />
       <workItem from="1778803413452" duration="598000" />
+      <workItem from="1779802453527" duration="299000" />
     </task>
     <servers />
   </component>
