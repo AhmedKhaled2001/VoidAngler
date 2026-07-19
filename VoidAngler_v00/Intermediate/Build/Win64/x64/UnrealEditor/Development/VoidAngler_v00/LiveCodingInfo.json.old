@@ -10,6 +10,7 @@
 			"EnemyBase.gen.cpp.obj",
 			"EnemyParent.gen.cpp.obj",
 			"LevelDeck.gen.cpp.obj",
+			"LevelDirector.gen.cpp.obj",
 			"OceanManager.gen.cpp.obj",
 			"PhysicsController.gen.cpp.obj",
 			"PlayerCharacter.gen.cpp.obj",
@@ -38,6 +39,7 @@
 			"AnchorPoint.cpp.obj",
 			"VoidAngler_v00.cpp.obj",
 			"ChunkManager.cpp.obj",
+			"LevelDirector.cpp.obj",
 			"OceanManager.cpp.obj",
 			"ProceduralLevelGenerator.cpp.obj",
 			"WorldChunk.cpp.obj"

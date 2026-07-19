@@ -55,13 +55,14 @@ void UPhysicsController::DetachAndSlingshot()
 
 void UPhysicsController::AttachToAnchor(AActor* AnchorActor)
 {
-	
+	if (!CanAttach) return;
 	CurrentAnchor = AnchorActor;
 	bIsTetherActive = true; 
 	FVector BoardLoc = PhysicsRoot->GetComponentLocation();
 	FVector TargetLoc = CurrentAnchor->GetActorLocation();
 	float InitialDistance = FVector::Distance(BoardLoc, TargetLoc);
-	CurrentRestLength = InitialDistance * 0.7f;
+	InitialGrappleDistance = InitialDistance;
+	CurrentRestLength = InitialDistance ;
 }
 
 void UPhysicsController::ApplyTetherForces()
@@ -110,21 +111,28 @@ void UPhysicsController::ApplyTetherForces()
        
 		// BaseSpeed guarantees the line stays taut
 		float BaseSpeed = FMath::Max(MinimumTautSpeed, ApproachSpeed);
-		float DynamicReelSpeed = BaseSpeed + CalculatedMotorSpeed;
-		
-		
+		float DynamicReelSpeed = MinimumTautSpeed + CalculatedMotorSpeed;
+        FString DynamicReelSpeedText = FString::Printf(TEXT("DynamicReelSpeed: %.2f (ApproachSpeed: %.2f) | CalcMotorSpeed: %.2f"), DynamicReelSpeed, ApproachSpeed, CalculatedMotorSpeed);
+        //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, DynamicReelSpeedText);
 		CurrentRestLength -= (DynamicReelSpeed * GetWorld()->GetDeltaSeconds());
 		CurrentRestLength = FMath::Max(CurrentRestLength, MinRopeLength);
 		
 		if (Distance > CurrentRestLength)
 		{
-			CurrentTension = FMath::Clamp(Distance - CurrentRestLength, 0.0f, MaxTension);
+			float k = FMath::Clamp(Distance - CurrentRestLength, 0.0f,
+				TensionCurve ? MaxTension * TensionCurve->GetFloatValue(SpeedRatio) : MaxTension);
+            FString KText = FString::Printf(TEXT("k: %.2f"), k);
+            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, KText);
+			CurrentTension = BungeeStiffness * k;
             FString TensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
-			float PullForce = CurrentTension * BungeeStiffness;
+			float PullForce = CurrentTension;
 			FVector PullDir = (TargetLoc - CurrentLoc).GetSafeNormal();
 			FString PullForceText = FString::Printf(TEXT("PullForce: %.2f"), PullForce);
 			PhysicsRoot->AddForce(PullDir * PullForce, NAME_None, false);
 		}
+        
+        FString CurrentTensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
+        //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, CurrentTensionText);
 		FColor RopeColor = CurrentTension > 500.0f ? FColor::Red : FColor::Green;
 		DrawDebugLine(GetWorld(), CurrentLoc, TargetLoc, RopeColor, false, -1.0f, 0, 5.0f);
 	}
@@ -234,8 +242,8 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
                 // Calculate the angle between our movement and the tether (0 to 180 degrees)
                 float AngleToAnchor = FMath::RadiansToDegrees(FMath::Acos(FVector::DotProduct(MoveDir, DirToAnchor)));
-            FString AngleToAnchorText = FString::Printf(TEXT("AngleToAnchor: %.2f"), AngleToAnchor);
-            GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Green, AngleToAnchorText);
+				FString AngleToAnchorText = FString::Printf(TEXT("AngleToAnchor: %.2f"), AngleToAnchor);
+				GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Green, AngleToAnchorText);
                 // How close are we to the Optimal Angle?
                 float AngleDiff = FMath::Abs(AngleToAnchor - OptimalTetherAngle);
                 
@@ -249,7 +257,7 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
             
             // 4. CALCULATE ALL FORCES
             float SidewaysSlipSpeed = FVector::DotProduct(Velocity, BoardRightEdge);
-            float EdgeEngagement = FMath::Abs(CurrentRoll) / MaxVisualRoll;
+            float EdgeEngagement = FMath::Abs(CurrentRoll) / MaxVisualRoll; // should be 90 i think
             
             // A. The Grip (Carve)
             FVector EdgeForce = -BoardRightEdge * (SidewaysSlipSpeed * EdgeEngagement * LiveStiffness);
@@ -258,15 +266,16 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
             FVector DragForce = -Velocity.GetSafeNormal() * (EffectiveFriction * EdgeEngagement);
 
             // C. The Slingshot Boost (Shoots straight out the visual nose of the board)
-            FVector BoostForce = BoardNoseDir * (SlingshotBoostPower * SweetSpotRatio);
 
             // 5. SHOVE THE BOARD
         	float SpeedRatio = Speed / SoftSpeedCap;
-
+        	CurrentSpeedRatio = SpeedRatio;
+            FVector BoostForce = BoostCurve ? BoardNoseDir * (SlingshotBoostPower * BoostCurve->GetFloatValue(CurrentSpeedRatio) * SweetSpotRatio) : FVector::ZeroVector;
         	// 2. The Curve! 
         	// If Exponent is 2.0: 0.5 ratio becomes 0.25 penalty (tiny drag).
         	// But if Speed hits 6000 (Ratio 2.0), penalty becomes 4.0 (MASSIVE drag).
-        	float CurvePenalty = FMath::Pow(SpeedRatio, DragCurveExponent);
+        	//float CurvePenalty = FMath::Pow(SpeedRatio, DragCurveExponent);
+        	float CurvePenalty = BrakeCurve ? BrakeCurve->GetFloatValue(CurrentSpeedRatio) : FMath::Pow(SpeedRatio, DragCurveExponent);
         	float ActiveDragMultiplier = AeroDragMultiplier;
 
         	// 2. If we are NOT tethered, drop the drag drastically so we coast!
@@ -312,5 +321,12 @@ void UPhysicsController::InitializeComponent(UPrimitiveComponent* InPhysicsRoot,
 {
 	PhysicsRoot = InPhysicsRoot;
 	BoardMesh = InBoardMesh;
+}
+
+void UPhysicsController::DisableTether()
+{
+	CurrentAnchor = nullptr;
+	bIsTetherActive = false;
+	CurrentTension = 0.0f;
 }
 

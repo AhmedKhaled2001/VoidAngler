@@ -55,7 +55,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Camera|Feedback")
 	float ShakeIntensity = 3.0f; 
-
+	UPROPERTY(EditAnywhere, Category = "Camera|Feedback")
+	float StartingSpeed = 3000.0f; 
 	UPROPERTY(EditAnywhere, Category = "Camera|Feedback")
 	float SkidImpactForce = 15.0f; 
 public:	

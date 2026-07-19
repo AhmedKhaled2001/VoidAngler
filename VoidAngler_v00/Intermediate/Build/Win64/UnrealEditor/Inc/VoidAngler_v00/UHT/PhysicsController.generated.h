@@ -15,6 +15,8 @@ PRAGMA_DISABLE_DEPRECATION_WARNINGS
 #define VOIDANGLER_V00_PhysicsController_generated_h
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_15_RPC_WRAPPERS_NO_PURE_DECLS \
+	DECLARE_FUNCTION(execSetCanAttach); \
+	DECLARE_FUNCTION(execDisableTether); \
 	DECLARE_FUNCTION(execSetSprintInput); \
 	DECLARE_FUNCTION(execSetSkidInput); \
 	DECLARE_FUNCTION(execSetSteeringInput);

@@ -10,6 +10,7 @@
 
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 class AActor;
+class UBoardComponent;
 class UPrimitiveComponent;
 struct FHitResult;
 #ifdef VOIDANGLER_V00_PlayerCharacter_generated_h
@@ -18,7 +19,8 @@ struct FHitResult;
 #define VOIDANGLER_V00_PlayerCharacter_generated_h
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_RPC_WRAPPERS_NO_PURE_DECLS \
-	DECLARE_FUNCTION(execOnRamHitboxOverlap);
+	DECLARE_FUNCTION(execOnRamHitboxOverlap); \
+	DECLARE_FUNCTION(execGetPhysicsBody);
 
 
 #define FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_PlayerCharacter_h_17_INCLASS_NO_PURE_DECLS \

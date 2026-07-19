@@ -20,6 +20,82 @@ VOIDANGLER_V00_API UClass* Z_Construct_UClass_UPhysicsController();
 VOIDANGLER_V00_API UClass* Z_Construct_UClass_UPhysicsController_NoRegister();
 // End Cross Module References
 
+// Begin Class UPhysicsController Function DisableTether
+struct Z_Construct_UFunction_UPhysicsController_DisableTether_Statics
+{
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+#endif // WITH_METADATA
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UPhysicsController_DisableTether_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UPhysicsController, nullptr, "DisableTether", nullptr, nullptr, nullptr, 0, 0, RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UPhysicsController_DisableTether_Statics::Function_MetaDataParams), Z_Construct_UFunction_UPhysicsController_DisableTether_Statics::Function_MetaDataParams) };
+UFunction* Z_Construct_UFunction_UPhysicsController_DisableTether()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UPhysicsController_DisableTether_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UPhysicsController::execDisableTether)
+{
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->DisableTether();
+	P_NATIVE_END;
+}
+// End Class UPhysicsController Function DisableTether
+
+// Begin Class UPhysicsController Function SetCanAttach
+struct Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics
+{
+	struct PhysicsController_eventSetCanAttach_Parms
+	{
+		bool bNewCanAttach;
+	};
+#if WITH_METADATA
+	static constexpr UECodeGen_Private::FMetaDataPairParam Function_MetaDataParams[] = {
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+#endif // WITH_METADATA
+	static void NewProp_bNewCanAttach_SetBit(void* Obj);
+	static const UECodeGen_Private::FBoolPropertyParams NewProp_bNewCanAttach;
+	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
+	static const UECodeGen_Private::FFunctionParams FuncParams;
+};
+void Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::NewProp_bNewCanAttach_SetBit(void* Obj)
+{
+	((PhysicsController_eventSetCanAttach_Parms*)Obj)->bNewCanAttach = 1;
+}
+const UECodeGen_Private::FBoolPropertyParams Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::NewProp_bNewCanAttach = { "bNewCanAttach", nullptr, (EPropertyFlags)0x0010000000000080, UECodeGen_Private::EPropertyGenFlags::Bool | UECodeGen_Private::EPropertyGenFlags::NativeBool, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, sizeof(bool), sizeof(PhysicsController_eventSetCanAttach_Parms), &Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::NewProp_bNewCanAttach_SetBit, METADATA_PARAMS(0, nullptr) };
+const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PropPointers[] = {
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::NewProp_bNewCanAttach,
+};
+static_assert(UE_ARRAY_COUNT(Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PropPointers) < 2048);
+const UECodeGen_Private::FFunctionParams Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::FuncParams = { (UObject*(*)())Z_Construct_UClass_UPhysicsController, nullptr, "SetCanAttach", nullptr, nullptr, Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PropPointers, UE_ARRAY_COUNT(Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PropPointers), sizeof(Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PhysicsController_eventSetCanAttach_Parms), RF_Public|RF_Transient|RF_MarkAsNative, (EFunctionFlags)0x04020401, 0, 0, METADATA_PARAMS(UE_ARRAY_COUNT(Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::Function_MetaDataParams), Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::Function_MetaDataParams) };
+static_assert(sizeof(Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::PhysicsController_eventSetCanAttach_Parms) < MAX_uint16);
+UFunction* Z_Construct_UFunction_UPhysicsController_SetCanAttach()
+{
+	static UFunction* ReturnFunction = nullptr;
+	if (!ReturnFunction)
+	{
+		UECodeGen_Private::ConstructUFunction(&ReturnFunction, Z_Construct_UFunction_UPhysicsController_SetCanAttach_Statics::FuncParams);
+	}
+	return ReturnFunction;
+}
+DEFINE_FUNCTION(UPhysicsController::execSetCanAttach)
+{
+	P_GET_UBOOL(Z_Param_bNewCanAttach);
+	P_FINISH;
+	P_NATIVE_BEGIN;
+	P_THIS->SetCanAttach(Z_Param_bNewCanAttach);
+	P_NATIVE_END;
+}
+// End Class UPhysicsController Function SetCanAttach
+
 // Begin Class UPhysicsController Function SetSkidInput
 struct Z_Construct_UFunction_UPhysicsController_SetSkidInput_Statics
 {
@@ -164,6 +240,8 @@ void UPhysicsController::StaticRegisterNativesUPhysicsController()
 {
 	UClass* Class = UPhysicsController::StaticClass();
 	static const FNameNativePtrPair Funcs[] = {
+		{ "DisableTether", &UPhysicsController::execDisableTether },
+		{ "SetCanAttach", &UPhysicsController::execSetCanAttach },
 		{ "SetSkidInput", &UPhysicsController::execSetSkidInput },
 		{ "SetSprintInput", &UPhysicsController::execSetSprintInput },
 		{ "SetSteeringInput", &UPhysicsController::execSetSteeringInput },
@@ -378,6 +456,22 @@ struct Z_Construct_UClass_UPhysicsController_Statics
 		{ "ToolTip", "X: Speed Ratio (CurrentSpeed / SoftSpeedCap). 0.0 = Stopped, 1.0 = At Speed Cap.\nY: Engine Power Multiplier. (e.g., 1.0 at slow speeds, 0.2 at max speed)." },
 #endif
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BoostCurve_MetaData[] = {
+		{ "Category", "Board|Slingshot" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BrakeCurve_MetaData[] = {
+		{ "Category", "Board|Speed Regulation" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TensionCurve_MetaData[] = {
+		{ "Category", "Tether|Reeling" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_CurrentSpeedRatio_MetaData[] = {
+		{ "Category", "PhysicsController" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_PhysicsRoot_MetaData[] = {
 		{ "EditInline", "true" },
 		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
@@ -428,6 +522,10 @@ struct Z_Construct_UClass_UPhysicsController_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_CoastingDragMultiplier;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_EngineDistancePowerCurve;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_EngineSpeedMultiplierCurve;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_BoostCurve;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_BrakeCurve;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_TensionCurve;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_CurrentSpeedRatio;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_PhysicsRoot;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CurrentAnchor;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_OceanManager;
@@ -435,6 +533,8 @@ struct Z_Construct_UClass_UPhysicsController_Statics
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
 	static constexpr FClassFunctionLinkInfo FuncInfo[] = {
+		{ &Z_Construct_UFunction_UPhysicsController_DisableTether, "DisableTether" }, // 3035164248
+		{ &Z_Construct_UFunction_UPhysicsController_SetCanAttach, "SetCanAttach" }, // 176122794
 		{ &Z_Construct_UFunction_UPhysicsController_SetSkidInput, "SetSkidInput" }, // 2339211158
 		{ &Z_Construct_UFunction_UPhysicsController_SetSprintInput, "SetSprintInput" }, // 1088404463
 		{ &Z_Construct_UFunction_UPhysicsController_SetSteeringInput, "SetSteeringInput" }, // 2916034003
@@ -480,6 +580,10 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UPhysicsControl
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_CoastingDragMultiplier = { "CoastingDragMultiplier", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, CoastingDragMultiplier), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CoastingDragMultiplier_MetaData), NewProp_CoastingDragMultiplier_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineDistancePowerCurve = { "EngineDistancePowerCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, EngineDistancePowerCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EngineDistancePowerCurve_MetaData), NewProp_EngineDistancePowerCurve_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineSpeedMultiplierCurve = { "EngineSpeedMultiplierCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, EngineSpeedMultiplierCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EngineSpeedMultiplierCurve_MetaData), NewProp_EngineSpeedMultiplierCurve_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_BoostCurve = { "BoostCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, BoostCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BoostCurve_MetaData), NewProp_BoostCurve_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_BrakeCurve = { "BrakeCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, BrakeCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BrakeCurve_MetaData), NewProp_BrakeCurve_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_TensionCurve = { "TensionCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, TensionCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TensionCurve_MetaData), NewProp_TensionCurve_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentSpeedRatio = { "CurrentSpeedRatio", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, CurrentSpeedRatio), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentSpeedRatio_MetaData), NewProp_CurrentSpeedRatio_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_PhysicsRoot = { "PhysicsRoot", nullptr, (EPropertyFlags)0x0040000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, PhysicsRoot), Z_Construct_UClass_UPrimitiveComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhysicsRoot_MetaData), NewProp_PhysicsRoot_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentAnchor = { "CurrentAnchor", nullptr, (EPropertyFlags)0x0040000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, CurrentAnchor), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentAnchor_MetaData), NewProp_CurrentAnchor_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_OceanManager = { "OceanManager", nullptr, (EPropertyFlags)0x0040000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, OceanManager), Z_Construct_UClass_AOceanManager_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_OceanManager_MetaData), NewProp_OceanManager_MetaData) };
@@ -520,6 +624,10 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UPhysicsC
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_CoastingDragMultiplier,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineDistancePowerCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineSpeedMultiplierCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_BoostCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_BrakeCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_TensionCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentSpeedRatio,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_PhysicsRoot,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentAnchor,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_OceanManager,
@@ -566,10 +674,10 @@ UPhysicsController::~UPhysicsController() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UPhysicsController, UPhysicsController::StaticClass, TEXT("UPhysicsController"), &Z_Registration_Info_UClass_UPhysicsController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UPhysicsController), 938808404U) },
+		{ Z_Construct_UClass_UPhysicsController, UPhysicsController::StaticClass, TEXT("UPhysicsController"), &Z_Registration_Info_UClass_UPhysicsController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UPhysicsController), 1202347423U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_3465146367(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_1911166322(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

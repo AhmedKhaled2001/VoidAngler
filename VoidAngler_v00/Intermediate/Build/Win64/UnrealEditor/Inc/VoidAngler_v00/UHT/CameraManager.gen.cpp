@@ -119,6 +119,10 @@ struct Z_Construct_UClass_UCameraManager_Statics
 		{ "Category", "Camera|Feedback" },
 		{ "ModuleRelativePath", "Character/Components/CameraManager.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_StartingSpeed_MetaData[] = {
+		{ "Category", "Camera|Feedback" },
+		{ "ModuleRelativePath", "Character/Components/CameraManager.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SkidImpactForce_MetaData[] = {
 		{ "Category", "Camera|Feedback" },
 		{ "ModuleRelativePath", "Character/Components/CameraManager.h" },
@@ -141,6 +145,7 @@ struct Z_Construct_UClass_UCameraManager_Statics
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_TiltInterpSpeed;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ShakeThreshold;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_ShakeIntensity;
+	static const UECodeGen_Private::FFloatPropertyParams NewProp_StartingSpeed;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_SkidImpactForce;
 	static const UECodeGen_Private::FPropertyParamsBase* const PropPointers[];
 	static UObject* (*const DependentSingletons[])();
@@ -169,6 +174,7 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_Statics::NewProp_TiltInterpSpeed = { "TiltInterpSpeed", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UCameraManager, TiltInterpSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TiltInterpSpeed_MetaData), NewProp_TiltInterpSpeed_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_Statics::NewProp_ShakeThreshold = { "ShakeThreshold", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UCameraManager, ShakeThreshold), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ShakeThreshold_MetaData), NewProp_ShakeThreshold_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_Statics::NewProp_ShakeIntensity = { "ShakeIntensity", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UCameraManager, ShakeIntensity), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_ShakeIntensity_MetaData), NewProp_ShakeIntensity_MetaData) };
+const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_Statics::NewProp_StartingSpeed = { "StartingSpeed", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UCameraManager, StartingSpeed), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_StartingSpeed_MetaData), NewProp_StartingSpeed_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UCameraManager_Statics::NewProp_SkidImpactForce = { "SkidImpactForce", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UCameraManager, SkidImpactForce), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SkidImpactForce_MetaData), NewProp_SkidImpactForce_MetaData) };
 const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UCameraManager_Statics::PropPointers[] = {
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_SpringArm,
@@ -187,6 +193,7 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UCameraMa
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_TiltInterpSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_ShakeThreshold,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_ShakeIntensity,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_StartingSpeed,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UCameraManager_Statics::NewProp_SkidImpactForce,
 };
 static_assert(UE_ARRAY_COUNT(Z_Construct_UClass_UCameraManager_Statics::PropPointers) < 2048);
@@ -230,10 +237,10 @@ UCameraManager::~UCameraManager() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_CameraManager_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UCameraManager, UCameraManager::StaticClass, TEXT("UCameraManager"), &Z_Registration_Info_UClass_UCameraManager, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UCameraManager), 578893044U) },
+		{ Z_Construct_UClass_UCameraManager, UCameraManager::StaticClass, TEXT("UCameraManager"), &Z_Registration_Info_UClass_UCameraManager, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UCameraManager), 1831152919U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_CameraManager_h_1403483428(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_CameraManager_h_3441458398(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_CameraManager_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_CameraManager_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

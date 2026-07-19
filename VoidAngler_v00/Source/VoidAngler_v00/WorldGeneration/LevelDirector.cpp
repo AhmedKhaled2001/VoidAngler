@@ -44,7 +44,7 @@ void ALevelDirector::BeginPlay()
 	
 	GetWorld()->GetTimerManager().SetTimer(PoolRefreshTimer, this, &ALevelDirector::RefreshActivePool, 0.5f, true);
 }
-void ALevelDirector::SpawnTestTsunami()
+/*void ALevelDirector::SpawnTestTsunami()
 {
 	if (!OceanManagerRef || !PlayerRef) return;
 	
@@ -59,7 +59,7 @@ void ALevelDirector::SpawnTestTsunami()
 	// 3. Fire the event!
 	OceanManagerRef->TriggerWaveEvent(TestTsunami, Epicenter, Radius, Falloff, Lifespan);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, TEXT("TSUNAMI INCOMING!"));
-}
+}*/
 void ALevelDirector::RefreshActivePool()
 {
 	if (!PlayerRef || !CurrentBiomeDeck) return;

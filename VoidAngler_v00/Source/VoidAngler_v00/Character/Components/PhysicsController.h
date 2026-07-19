@@ -134,15 +134,24 @@ protected:
 	// Y: Engine Power Multiplier. (e.g., 1.0 at slow speeds, 0.2 at max speed).
 	UPROPERTY(EditAnywhere, Category = "Tether|Motor")
 	UCurveFloat* EngineSpeedMultiplierCurve;
+	UPROPERTY(EditAnywhere, Category = "Board|Slingshot")
+	UCurveFloat* BoostCurve;
+	UPROPERTY(EditAnywhere, Category = "Board|Speed Regulation")
+	UCurveFloat* BrakeCurve;
+	UPROPERTY(EditAnywhere, Category = "Tether|Reeling")
+	UCurveFloat* TensionCurve;
 
-
-	
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void InitializeComponent(UPrimitiveComponent* InPhysicsRoot, UPrimitiveComponent* InBoardMesh);
-
-
-
+	void SetCurrentMaxSpeed(float NewSpeed){SoftSpeedCap = NewSpeed;}
+	float GetCurrentMaxSpeed(){return SoftSpeedCap;}
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	float CurrentSpeedRatio= 0.0f;
+	UFUNCTION(BlueprintCallable)
+	void DisableTether();
+	UFUNCTION(BlueprintCallable)
+	void SetCanAttach(bool bNewCanAttach){CanAttach = bNewCanAttach;}	
 	
 private:
 	float InitialGrappleDistance;
@@ -154,6 +163,7 @@ private:
 	float CurrentRestLength = 0.0f;
 	float CurrentTension = 0.0f;
 	bool bIsTetherActive = false;
+	bool CanAttach = true;
 	UPROPERTY()
 	UPrimitiveComponent* PhysicsRoot;
 	UPROPERTY()

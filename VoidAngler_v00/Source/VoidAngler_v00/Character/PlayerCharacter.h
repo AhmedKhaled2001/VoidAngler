@@ -20,6 +20,8 @@ public:
 	APlayerCharacter();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION()
+	UBoardComponent* GetPhysicsBody() const { return BoardComponentt; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
@@ -45,11 +47,11 @@ protected:
 	void Winch(float Value);
 	void Brake();
 	void BrakeReleased();
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly, Category="Components")
+	UBoardComponent* BoardComponentt;
 private:
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UStaticMeshComponent* CharacterMesh;
-	UPROPERTY(VisibleAnywhere, Category="Components")
-	UBoardComponent* BoardComponentt;
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	class UCameraManager* CameraManager;
 	UPROPERTY(VisibleAnywhere, Category="Components")
@@ -57,8 +59,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category="Components")
 	UTetherComponent* TetherComponent;
 
-	UPROPERTY(VisibleAnywhere, Category="Components")
-	class UPhysicsController* PhysicsControllerr;
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	USpringArmComponent* SpringArm;
 	
@@ -80,6 +80,8 @@ private:
 	void Turn(float Value);
 	void LookUp(float Value);
 public:	
+	UPROPERTY(VisibleAnywhere, Category="Components", BlueprintReadOnly)
+	class UPhysicsController* PhysicsControllerr;
 	void SetCheckpoint(FVector NewLocation);
 
 	// Call this to kill/respawn the player

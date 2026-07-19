@@ -22,6 +22,7 @@ UCameraManager::UCameraManager()
 void UCameraManager::BeginPlay()
 {
 	Super::BeginPlay();
+	StartingSpeed = PhysicsComp->GetCurrentMaxSpeed();
 }
 
 
@@ -32,7 +33,7 @@ void UCameraManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	if (!SpringArm || !PlayerCamera || !PhysicsComp) return;
 	
 	float Speed = PhysicsComp->GetCurrentSpeed();
-	float SpeedCap = PhysicsComp->GetSoftSpeedCap();
+	float SpeedCap = StartingSpeed;
 	float SpeedRatio = FMath::Clamp(Speed / SpeedCap, 0.0f, 1.5f);
 	float BoardRoll = PhysicsComp->GetCurrentRoll();
 	bool bIsSkidding = PhysicsComp->GetIsSkidding();
