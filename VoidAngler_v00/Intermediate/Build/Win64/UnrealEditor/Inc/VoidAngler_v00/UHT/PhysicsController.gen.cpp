@@ -460,11 +460,19 @@ struct Z_Construct_UClass_UPhysicsController_Statics
 		{ "Category", "Board|Slingshot" },
 		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
 	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_SpeedGainCurve_MetaData[] = {
+		{ "Category", "Board|Speed Regulation" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_BrakeCurve_MetaData[] = {
 		{ "Category", "Board|Speed Regulation" },
 		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
 	};
 	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_TensionCurve_MetaData[] = {
+		{ "Category", "Tether|Reeling" },
+		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
+	};
+	static constexpr UECodeGen_Private::FMetaDataPairParam NewProp_StiffnessCurve_MetaData[] = {
 		{ "Category", "Tether|Reeling" },
 		{ "ModuleRelativePath", "Character/Components/PhysicsController.h" },
 	};
@@ -523,8 +531,10 @@ struct Z_Construct_UClass_UPhysicsController_Statics
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_EngineDistancePowerCurve;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_EngineSpeedMultiplierCurve;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_BoostCurve;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_SpeedGainCurve;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_BrakeCurve;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_TensionCurve;
+	static const UECodeGen_Private::FObjectPropertyParams NewProp_StiffnessCurve;
 	static const UECodeGen_Private::FFloatPropertyParams NewProp_CurrentSpeedRatio;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_PhysicsRoot;
 	static const UECodeGen_Private::FObjectPropertyParams NewProp_CurrentAnchor;
@@ -581,8 +591,10 @@ const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UPhysicsControl
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineDistancePowerCurve = { "EngineDistancePowerCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, EngineDistancePowerCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EngineDistancePowerCurve_MetaData), NewProp_EngineDistancePowerCurve_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineSpeedMultiplierCurve = { "EngineSpeedMultiplierCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, EngineSpeedMultiplierCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_EngineSpeedMultiplierCurve_MetaData), NewProp_EngineSpeedMultiplierCurve_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_BoostCurve = { "BoostCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, BoostCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BoostCurve_MetaData), NewProp_BoostCurve_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_SpeedGainCurve = { "SpeedGainCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, SpeedGainCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_SpeedGainCurve_MetaData), NewProp_SpeedGainCurve_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_BrakeCurve = { "BrakeCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, BrakeCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_BrakeCurve_MetaData), NewProp_BrakeCurve_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_TensionCurve = { "TensionCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, TensionCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_TensionCurve_MetaData), NewProp_TensionCurve_MetaData) };
+const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_StiffnessCurve = { "StiffnessCurve", nullptr, (EPropertyFlags)0x0020080000000001, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, StiffnessCurve), Z_Construct_UClass_UCurveFloat_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_StiffnessCurve_MetaData), NewProp_StiffnessCurve_MetaData) };
 const UECodeGen_Private::FFloatPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentSpeedRatio = { "CurrentSpeedRatio", nullptr, (EPropertyFlags)0x0010000000000015, UECodeGen_Private::EPropertyGenFlags::Float, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, CurrentSpeedRatio), METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentSpeedRatio_MetaData), NewProp_CurrentSpeedRatio_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_PhysicsRoot = { "PhysicsRoot", nullptr, (EPropertyFlags)0x0040000000080008, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, PhysicsRoot), Z_Construct_UClass_UPrimitiveComponent_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_PhysicsRoot_MetaData), NewProp_PhysicsRoot_MetaData) };
 const UECodeGen_Private::FObjectPropertyParams Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentAnchor = { "CurrentAnchor", nullptr, (EPropertyFlags)0x0040000000000000, UECodeGen_Private::EPropertyGenFlags::Object, RF_Public|RF_Transient|RF_MarkAsNative, nullptr, nullptr, 1, STRUCT_OFFSET(UPhysicsController, CurrentAnchor), Z_Construct_UClass_AActor_NoRegister, METADATA_PARAMS(UE_ARRAY_COUNT(NewProp_CurrentAnchor_MetaData), NewProp_CurrentAnchor_MetaData) };
@@ -625,8 +637,10 @@ const UECodeGen_Private::FPropertyParamsBase* const Z_Construct_UClass_UPhysicsC
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineDistancePowerCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_EngineSpeedMultiplierCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_BoostCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_SpeedGainCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_BrakeCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_TensionCurve,
+	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_StiffnessCurve,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentSpeedRatio,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_PhysicsRoot,
 	(const UECodeGen_Private::FPropertyParamsBase*)&Z_Construct_UClass_UPhysicsController_Statics::NewProp_CurrentAnchor,
@@ -674,10 +688,10 @@ UPhysicsController::~UPhysicsController() {}
 struct Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics
 {
 	static constexpr FClassRegisterCompiledInInfo ClassInfo[] = {
-		{ Z_Construct_UClass_UPhysicsController, UPhysicsController::StaticClass, TEXT("UPhysicsController"), &Z_Registration_Info_UClass_UPhysicsController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UPhysicsController), 1202347423U) },
+		{ Z_Construct_UClass_UPhysicsController, UPhysicsController::StaticClass, TEXT("UPhysicsController"), &Z_Registration_Info_UClass_UPhysicsController, CONSTRUCT_RELOAD_VERSION_INFO(FClassReloadVersionInfo, sizeof(UPhysicsController), 756932800U) },
 	};
 };
-static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_1911166322(TEXT("/Script/VoidAngler_v00"),
+static FRegisterCompiledInInfo Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_3829102522(TEXT("/Script/VoidAngler_v00"),
 	Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics::ClassInfo, UE_ARRAY_COUNT(Z_CompiledInDeferFile_FID_VoidAngler_RR_VoidAngler_VoidAngler_v00_Source_VoidAngler_v00_Character_Components_PhysicsController_h_Statics::ClassInfo),
 	nullptr, 0,
 	nullptr, 0);

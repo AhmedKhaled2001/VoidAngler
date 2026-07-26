@@ -16,6 +16,7 @@ class VOIDANGLER_V00_API UPhysicsController : public UActorComponent
 
 public:	
 	UPhysicsController();
+	float CurrentSpeedSoftCap;
 	bool IsTetherActive() const { return bIsTetherActive; }
 	void DetachAndSlingshot();
 	void AttachToAnchor(AActor* AnchorActor);
@@ -137,9 +138,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Board|Slingshot")
 	UCurveFloat* BoostCurve;
 	UPROPERTY(EditAnywhere, Category = "Board|Speed Regulation")
+	UCurveFloat* SpeedGainCurve;
+	UPROPERTY(EditAnywhere, Category = "Board|Speed Regulation")
 	UCurveFloat* BrakeCurve;
 	UPROPERTY(EditAnywhere, Category = "Tether|Reeling")
 	UCurveFloat* TensionCurve;
+	UPROPERTY(EditAnywhere, Category = "Tether|Reeling")
+	UCurveFloat* StiffnessCurve;
 
 public:	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -155,6 +160,8 @@ public:
 	
 private:
 	float InitialGrappleDistance;
+	
+	float LastAttachSpeed;
 	float SnapshotApproachSpeed;
 	float CalculatedTargetBoost;
 	float TimeSinceAttached;

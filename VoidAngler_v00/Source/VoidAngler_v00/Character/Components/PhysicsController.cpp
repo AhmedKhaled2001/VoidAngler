@@ -18,6 +18,7 @@ void UPhysicsController::BeginPlay()
 
 	Super::BeginPlay();
 	OceanManager = Cast<AOceanManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AOceanManager::StaticClass()));
+	CurrentSpeedSoftCap = 0;;
 }
 
 void UPhysicsController::HandleSuspension()
@@ -46,7 +47,7 @@ void UPhysicsController::DetachAndSlingshot()
 	if (!PhysicsRoot || !CurrentAnchor) return;
 
 	// ... (Your Slingshot Math) ...
-
+	CurrentSpeedSoftCap = SoftSpeedCap;
 	// Clear state
 	CurrentAnchor = nullptr;
 	bIsTetherActive = false; // Reset the flag!
@@ -63,79 +64,55 @@ void UPhysicsController::AttachToAnchor(AActor* AnchorActor)
 	float InitialDistance = FVector::Distance(BoardLoc, TargetLoc);
 	InitialGrappleDistance = InitialDistance;
 	CurrentRestLength = InitialDistance ;
+	LastAttachSpeed = PhysicsRoot->GetComponentVelocity().Size2D();
+	CurrentSpeedRatio = LastAttachSpeed / SoftSpeedCap;
+	CurrentSpeedSoftCap = FMath::Clamp(SoftSpeedCap * SpeedGainCurve->GetFloatValue(CurrentSpeedRatio) ,2000, SoftSpeedCap);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("CurrentSpeedSoftCap: %.2f"), CurrentSpeedSoftCap));
 }
 
 void UPhysicsController::ApplyTetherForces()
 {
+	if (!CurrentAnchor || !PhysicsRoot) return;
+
 	FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
-	if (CurrentAnchor && PhysicsRoot)
+	FVector TargetLoc = CurrentAnchor->GetActorLocation();
+	TargetLoc.Z = 0.0f; 
+    
+	FVector Velocity = PhysicsRoot->GetComponentVelocity();
+	FVector DirToAnchor = (TargetLoc - CurrentLoc).GetSafeNormal();
+    
+	float Distance = FVector::Distance(CurrentLoc, TargetLoc);
+    if (Distance <= MinRopeLength) return;
+	// How fast are we currently moving directly toward the anchor?
+	float ApproachSpeed = FVector::DotProduct(Velocity, DirToAnchor);
+
+	// --- 1. THE WINCH PULL (The Boat) ---
+	// Calculate how far below our allowed pull speed we are
+	float PullSpeedDeficit = CurrentSpeedSoftCap - ApproachSpeed;
+    
+	if (PullSpeedDeficit > 0.0f)
 	{
-		CurrentTension = 0.0f; // Reset every frame
-		FVector TargetLoc = CurrentAnchor->GetActorLocation();
-		TargetLoc.Z = 0.0f;
-		float Distance = FVector::Distance(CurrentLoc, TargetLoc);
-		FVector DirToAnchor = (TargetLoc - CurrentLoc).GetSafeNormal();
-		
-		float DistanceProgress = 0.0f;
-		if (InitialGrappleDistance > 10.0f)
-		{
-			DistanceProgress = 1.0f - FMath::Clamp(Distance / InitialGrappleDistance, 0.0f, 1.0f);
-		}
-		float RevMultiplier = 1.0f;
-		if (EngineDistancePowerCurve)
-		{
-			RevMultiplier = EngineDistancePowerCurve->GetFloatValue(DistanceProgress);
-		}
-
-		FVector Velocity = PhysicsRoot->GetComponentVelocity();
-		float TotalSpeed = Velocity.Size2D();
-		float ApproachSpeed = FVector::DotProduct(Velocity, DirToAnchor);
-
-		// Calculate how fast we are going relative to the cap (Can go over 1.0!)
-		float SpeedRatio = 0.0f;
-		if (SoftSpeedCap > 10.0f) // Safety check against divide-by-zero
-		{
-			SpeedRatio = TotalSpeed / SoftSpeedCap; 
-		}
-
-		// Read your custom transmission curve
-		float SpeedMultiplier = 1.0f; // Default to full power if curve is missing
-		if (EngineSpeedMultiplierCurve)
-		{
-			SpeedMultiplier = EngineSpeedMultiplierCurve->GetFloatValue(SpeedRatio);
-		}
-
-		// --- 3. THE MAGIC ENGINE MATH ---
-		// Power = Base Speed * Distance Curve * Speed Curve
-		float CalculatedMotorSpeed = EngineReelSpeed * RevMultiplier * SpeedMultiplier;
-       
-		// BaseSpeed guarantees the line stays taut
-		float BaseSpeed = FMath::Max(MinimumTautSpeed, ApproachSpeed);
-		float DynamicReelSpeed = MinimumTautSpeed + CalculatedMotorSpeed;
-        FString DynamicReelSpeedText = FString::Printf(TEXT("DynamicReelSpeed: %.2f (ApproachSpeed: %.2f) | CalcMotorSpeed: %.2f"), DynamicReelSpeed, ApproachSpeed, CalculatedMotorSpeed);
-        //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, DynamicReelSpeedText);
-		CurrentRestLength -= (DynamicReelSpeed * GetWorld()->GetDeltaSeconds());
-		CurrentRestLength = FMath::Max(CurrentRestLength, MinRopeLength);
-		
-		if (Distance > CurrentRestLength)
-		{
-			float k = FMath::Clamp(Distance - CurrentRestLength, 0.0f,
-				TensionCurve ? MaxTension * TensionCurve->GetFloatValue(SpeedRatio) : MaxTension);
-            FString KText = FString::Printf(TEXT("k: %.2f"), k);
-            GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, KText);
-			CurrentTension = BungeeStiffness * k;
-            FString TensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
-			float PullForce = CurrentTension;
-			FVector PullDir = (TargetLoc - CurrentLoc).GetSafeNormal();
-			FString PullForceText = FString::Printf(TEXT("PullForce: %.2f"), PullForce);
-			PhysicsRoot->AddForce(PullDir * PullForce, NAME_None, false);
-		}
-        
-        FString CurrentTensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
-        //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, CurrentTensionText);
-		FColor RopeColor = CurrentTension > 500.0f ? FColor::Red : FColor::Green;
-		DrawDebugLine(GetWorld(), CurrentLoc, TargetLoc, RopeColor, false, -1.0f, 0, 5.0f);
+		// TetherPullFactor determines how aggressively it yanks you up to the target speed
+		float PullForce = PullSpeedDeficit * FMath::Clamp(MaxTension * CurrentSpeedRatio, 5.0f, MaxTension);
+		PhysicsRoot->AddForce(DirToAnchor * PullForce, NAME_None, true);
 	}
+
+	// --- 2. THE TAUT LINE (The Rope Limit) ---
+	// If the player carves hard and exceeds the initial rope length, 
+	// the rope acts as a rigid boundary and yanks them into a circular arc.
+	if (Distance > InitialGrappleDistance)
+	{
+		float StretchError = Distance - InitialGrappleDistance;
+        
+		// High stiffness (RigidRopeStiffness) and damping (RigidRopeDamping) 
+		// to prevent bungee bouncing when they hit the end of the rope.
+		float CorrectiveTension = (StretchError * BungeeStiffness) + (-ApproachSpeed * 100.0f);
+        
+		CorrectiveTension = FMath::Max(CorrectiveTension, 0.0f); 
+		PhysicsRoot->AddForce(DirToAnchor * CorrectiveTension, NAME_None, true);
+	}
+
+	DrawDebugLine(GetWorld(), CurrentLoc, TargetLoc, FColor::Green, false, -1.0f, 0, 5.0f);
 }
 
 void UPhysicsController::SetSteeringInput(float RawInput)
@@ -185,7 +162,7 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
     }
 
     // --- 1. SET TARGETS BASED ON INPUT ---
-    float TargetStiff = StdStiffness;
+    float TargetStiff = StiffnessCurve ? StdStiffness * StiffnessCurve->GetFloatValue(CurrentSpeedRatio): StdStiffness;
     float TargetFric = StdFriction;
     float TargetMYaw = StdMaxYaw;
 
@@ -253,12 +230,13 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 
             // 3. APPLY SLINGSHOT MODIFIERS
             // If SweetSpotRatio is 1.0, friction drops to 0 (water turns to ice so you don't lose the boost)
-            float EffectiveFriction = LiveFriction * (1.0f - SweetSpotRatio);
+            float EffectiveFriction = LiveFriction;
             
             // 4. CALCULATE ALL FORCES
             float SidewaysSlipSpeed = FVector::DotProduct(Velocity, BoardRightEdge);
             float EdgeEngagement = FMath::Abs(CurrentRoll) / MaxVisualRoll; // should be 90 i think
-            
+            FString EdgeEngagementText = FString::Printf(TEXT("EdgeEngagement: %.2f"), EdgeEngagement);
+            GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, EdgeEngagementText);
             // A. The Grip (Carve)
             FVector EdgeForce = -BoardRightEdge * (SidewaysSlipSpeed * EdgeEngagement * LiveStiffness);
             
@@ -268,8 +246,8 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
             // C. The Slingshot Boost (Shoots straight out the visual nose of the board)
 
             // 5. SHOVE THE BOARD
-        	float SpeedRatio = Speed / SoftSpeedCap;
-        	CurrentSpeedRatio = SpeedRatio;
+        	float SpeedRatio = Speed / CurrentSpeedSoftCap;
+        	//CurrentSpeedRatio = SpeedRatio;
             FVector BoostForce = BoostCurve ? BoardNoseDir * (SlingshotBoostPower * BoostCurve->GetFloatValue(CurrentSpeedRatio) * SweetSpotRatio) : FVector::ZeroVector;
         	// 2. The Curve! 
         	// If Exponent is 2.0: 0.5 ratio becomes 0.25 penalty (tiny drag).
@@ -296,7 +274,7 @@ void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FAc
         	GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, EdgeForceText);
         	// --- 5. SHOVE THE BOARD ---
         	// We just add our new AeroDragForce to the final push!
-        	PhysicsRoot->AddForce(EdgeForce + DragForce + BoostForce + AeroDragForce, NAME_None, true);
+        	PhysicsRoot->AddForce(EdgeForce + DragForce + AeroDragForce, NAME_None, true);
             
             GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Red, FString::Printf(TEXT("SweetSpotRatio: %.2f"), SweetSpotRatio));
             // --- DEBUG: SEE THE MAGIC ---

@@ -173,7 +173,7 @@ void ALevelDirector::BuildBordersAhead()
     		if (ActivePatternQueue[i].TargetDistance <= LeftWallDistanceBuilt)
     		{
     			FVector FinalLocation = NewCenterLoc + (TrackRight * ActivePatternQueue[i].RightwardOffset) + FVector(0.0f, 0.0f, 700.0f);
-    			FinalLocation.Z = 130.0f;
+    			FinalLocation.Z = 700.0f;
     			FActorSpawnParameters SpawnParams;
     			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
                 
@@ -244,7 +244,7 @@ void ALevelDirector::TrySpawnPattern(float CurrentBuildDistance)
         {
         	FPendingSpawn NewPendingSpawn;
         	NewPendingSpawn.AssetClass = Item.AssetClass;
-        	float AbsoluteSpawnDistance = CurrentBuildDistance + Item.ForwardOffset;
+        	float AbsoluteSpawnDistance = CurrentBuildDistance + (Item.ForwardOffset * SelectedPattern.PatternLength);
         	NewPendingSpawn.TargetDistance = AbsoluteSpawnDistance;
         	float WidthAtSpawn = CurrentBiomeDeck->LaneWidthCurve->GetFloatValue(AbsoluteSpawnDistance);
         	NewPendingSpawn.RightwardOffset = (WidthAtSpawn / 2.0f) * Item.LanePosition;
