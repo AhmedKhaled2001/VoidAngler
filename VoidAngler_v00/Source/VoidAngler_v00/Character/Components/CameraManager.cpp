@@ -35,7 +35,7 @@ void UCameraManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	float Speed = PhysicsComp->GetCurrentSpeed();
 	float SpeedCap = PhysicsComp->CurrentSpeedSoftCap == 0.0f ? StartingSpeed : PhysicsComp->CurrentSpeedSoftCap;
 	float SpeedRatio = FMath::Clamp(Speed / SpeedCap, 0.0f, 1.5f);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("SpeedRatio: %.2f"), SpeedRatio));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("SpeedRatio: %.2f"), SpeedRatio));
 	float BoardRoll = PhysicsComp->GetCurrentRoll();
 	bool bIsSkidding = PhysicsComp->GetIsSkidding();
 	bool bIsSprinting = PhysicsComp->GetIsSprinting();

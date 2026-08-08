@@ -22,6 +22,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	UFUNCTION()
 	UBoardComponent* GetPhysicsBody() const { return BoardComponentt; }
+	UCameraComponent* GetCamera() const { return Camera; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;

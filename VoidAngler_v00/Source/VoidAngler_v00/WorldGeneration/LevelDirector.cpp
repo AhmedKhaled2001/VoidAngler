@@ -172,8 +172,8 @@ void ALevelDirector::BuildBordersAhead()
     	{
     		if (ActivePatternQueue[i].TargetDistance <= LeftWallDistanceBuilt)
     		{
-    			FVector FinalLocation = NewCenterLoc + (TrackRight * ActivePatternQueue[i].RightwardOffset) + FVector(0.0f, 0.0f, 700.0f);
-    			FinalLocation.Z = 700.0f;
+    			FVector FinalLocation = NewCenterLoc + (TrackRight * ActivePatternQueue[i].RightwardOffset) + FVector(0.0f, 0.0f, 7000.0f);
+    			FinalLocation.Z = 3000.0f;
     			FActorSpawnParameters SpawnParams;
     			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
                 

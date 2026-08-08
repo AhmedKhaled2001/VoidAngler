@@ -3,7 +3,9 @@
 
 #include "PhysicsController.h"
 
+#include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "VoidAngler_v00/Character/PlayerCharacter.h"
 #include "VoidAngler_v00/WorldGeneration/OceanManager.h"
 
 UPhysicsController::UPhysicsController()
@@ -13,15 +15,352 @@ UPhysicsController::UPhysicsController()
 
 }
 
+
+
+
+
+
+
+
+
+
 void UPhysicsController::BeginPlay()
 {
 
 	Super::BeginPlay();
 	OceanManager = Cast<AOceanManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AOceanManager::StaticClass()));
 	CurrentSpeedSoftCap = 0;;
+	
+	ComputedForwardDrag = ReelAcceleration / (MaxTerminalVelocity * MaxTerminalVelocity);
+	// Scale the lateral bite based on the ratio
+	ComputedLateralDrag = ComputedForwardDrag * LateralGripRatio;
+	CurrentForwardDrag = ComputedForwardDrag;
+	CurrentLateralDrag = ComputedLateralDrag;
+}
+// Engine Main Loop
+float UPhysicsController::HandleSuspensionNeed()
+{
+	if (!OceanManager || !PhysicsRoot) return 0.0f;
+	FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
+	float WaveZ = OceanManager->GetWaterHeightAt(FVector2D(CurrentLoc.X, CurrentLoc.Y), GetWorld()->GetTimeSeconds());
+	float TargetZ = WaveZ + RideHeightOffset;
+	float ZError = TargetZ - CurrentLoc.Z;
+	return ZError * ZSnapResponsiveness;
+}
+void UPhysicsController::UpdateKinematicIntent()
+{
+	/*if (!FMath::IsNearlyZero(CurrentSteeringInput))
+	{
+		LastActiveSteering = CurrentSteeringInput;
+	}
+
+	// 1. THE 45-DEGREE FORCE EQUILIBRIUM
+	float AngleRatio = CurrentCarveAngle / 45.0f; 
+	float RestoringForce = 0.0f;
+    
+	// Player Push: Tune MaxTurnRate to change how "punchy" the steering feels.
+	float PlayerPushForce = CurrentSteeringInput * -1.0f * MaxTurnRate; 
+
+	if (CurrentAnchor)
+	{
+		// The closer you get to 45 degrees, the harder the rope rips you back to 0.
+		RestoringForce = -FMath::Sign(CurrentCarveAngle) * (AngleRatio * AngleRatio) * MaxExpectedLateralDrag;
+	}
+	else
+	{
+		// Free riding: Water naturally straightens the board. 
+		RestoringForce = -CurrentCarveAngle * 5.0f; // Tune this to change free-ride floatiness
+	}
+
+	// 2. APPLY FORCES (No slow-motion 0.5f dampening)
+	float NetForce = PlayerPushForce + RestoringForce;
+    
+	// Multiply by a larger scalar if it still feels sluggish, but let the forces do the work.
+	CurrentCarveAngle += (NetForce * GetWorld()->GetDeltaSeconds() * 5.0f); 
+
+	// 3. THE HARD BOUNDARY
+	CurrentCarveAngle = FMath::Clamp(CurrentCarveAngle, -45.0f, 45.0f);*/
+
+	float CurrentTargetLean = CurrentSteeringInput; 
+	CurrentLean = FMath::FInterpTo(CurrentLean, CurrentTargetLean, GetWorld()->GetDeltaSeconds(), LeaningBaseSpeed);
+	EdgeTiltRatio = FMath::Abs(CurrentLean);
+}
+FVector2D UPhysicsController::ProcessFreeCarving(float DeltaTime, FVector2d InVelocityXY)
+{
+	
+	float Speed = InVelocityXY.Size();
+    
+    // Safety check to prevent micro-stutter division by zero
+    if (Speed < 10.0f) return InVelocityXY;
+
+    FVector2D TravelDir = InVelocityXY / Speed; 
+    float VelocityYaw = FMath::RadiansToDegrees(FMath::Atan2(TravelDir.Y, TravelDir.Y));
+
+    // --- 1. TORQUE (Edge engagement drives heading rotation) ---
+    // LiveTurnRate comes from your transmission layer (Sprint/Skid/Normal)
+    float TurnRate = EdgeTiltRatio * Speed * MaxTurnRate * DeltaTime;
+    BoardHeadingYaw += TurnRate * FMath::Sign(CurrentLean);
+
+    // --- 2. SLIP MATH ---
+    // How far off the travel path is the nose actually pointing?
+    float SlipAngle = FMath::FindDeltaAngleDegrees(VelocityYaw, BoardHeadingYaw);
+    
+    // Extract strictly the lateral speed (water hitting broadside)
+    float SlipSpeed = Speed * FMath::Abs(FMath::Sin(FMath::DegreesToRadians(SlipAngle)));
+
+    // --- 3. THE BRAKES (Hydrodynamic Drag & Coasting) ---
+    // Drag requires BOTH slip speed AND edge tilt (surface area).
+    float DragDeceleration = (SlipSpeed * SlipSpeed) * EdgeTiltRatio * FreeEdgeBrakingFriction;
+    
+    // Base friction prevents infinite gliding when flat
+    float CoastingDeceleration = Speed * BaseWaterFriction; 
+       
+    // Frame-safe clamp: You cannot lose more speed than you possess.
+    float TotalSpeedLoss = (DragDeceleration + CoastingDeceleration) * DeltaTime;
+    float SafeSpeedLoss = FMath::Min(TotalSpeedLoss, Speed);
+    float FinalSpeed = Speed - SafeSpeedLoss;
+
+    // --- 4. THE GRIP (Redirection of Momentum) ---
+    // Grip pushes the velocity vector toward the board's heading.
+    float GripMagnitude = SlipSpeed * EdgeTiltRatio * FreeLateralGripStiffness * DeltaTime;
+    
+    // Calculate the right-vector of the physical board heading
+    float HeadingRad = FMath::DegreesToRadians(BoardHeadingYaw);
+    FVector2D BoardRight(FMath::Sin(HeadingRad), -FMath::Cos(HeadingRad)); 
+    
+    FVector2D GripVelocityChange = BoardRight * GripMagnitude * FMath::Sign(SlipAngle);
+    FVector2D NewVelocity = InVelocityXY + GripVelocityChange;
+
+	
+	return InVelocityXY;
+    //return NewVelocity.GetSafeNormal() * FinalSpeed;
 }
 
-void UPhysicsController::HandleSuspension()
+
+FVector2D UPhysicsController::ProcessTetherCarving(float DeltaTime, FVector2d InVelocityXY)
+{
+	
+	if (!CurrentAnchor) { return ProcessFreeCarving(DeltaTime, InVelocityXY); }
+
+	float Speed = InVelocityXY.Size();
+	FVector2D AnchorLocXY = FVector2D(CurrentAnchor->GetActorLocation().X, CurrentAnchor->GetActorLocation().Y);
+	FVector2D PlayerLocXY = FVector2D(PhysicsRoot->GetComponentLocation().X, PhysicsRoot->GetComponentLocation().Y);
+	FVector2D DirToAnchor = (AnchorLocXY - PlayerLocXY).GetSafeNormal();
+
+	// 1. INWARD VS TANGENTIAL
+	FVector2D Tangent = FVector2D(-DirToAnchor.Y, DirToAnchor.X);
+	float InwardSpeed = FVector2D::DotProduct(InVelocityXY, DirToAnchor);
+	float TangentSpeed = FVector2D::DotProduct(InVelocityXY, Tangent);
+
+	// 2. THE REEL
+	InwardSpeed = FMath::Max(InwardSpeed, ReelAcceleration);
+
+	// 3. APPLY EDGE TO TANGENT
+	// The player's edge engagement creates lateral force.
+	float LateralAccel = EdgeTiltRatio * -CarveAcceleration;
+	TangentSpeed += (LateralAccel * FMath::Sign(CurrentLean)) * DeltaTime;
+
+	float SlipRatio = FMath::Abs(FMath::Sin(FMath::DegreesToRadians(CurrentCarveAngle)));
+    
+	// 2. ISOLATE SLIP SPEED
+	// This is the literal speed at which water is hitting the broad side of the board.
+	float SlipSpeed = TangentSpeed * SlipRatio;
+
+	// 3. CALCULATE HYDRODYNAMIC DRAG
+	// Drag is driven by the square of the SLIP speed (not total speed), scaled by how deep the edge is buried.
+	float LateralDragDeceleration = EdgeTiltRatio * (SlipSpeed * SlipSpeed) * HydroDragCoefficient;
+
+	// 4. PREVENT THE EXPLOSION (The Clamp)
+	// Calculate the total speed drop for this frame.
+	float SpeedDrop = LateralDragDeceleration * DeltaTime;
+    
+	// You cannot lose more speed than you currently have. This prevents the NaN oscillation crash.
+	float MaxPossibleSpeedDrop = FMath::Abs(TangentSpeed);
+	float SafeSpeedDrop = FMath::Min(SpeedDrop, MaxPossibleSpeedDrop);
+
+	// 5. APPLY THE SAFE DRAG
+	TangentSpeed -= SafeSpeedDrop * FMath::Sign(TangentSpeed);
+
+	// 5. THE TENSION LIMIT TEST
+	// High edge engagement + high lateral speed = massive physical tension on the rope.
+	float CurrentStress = EdgeTiltRatio * FMath::Abs(TangentSpeed);
+    
+    FString CurrentStressText = FString::Printf(TEXT("Current Stress: %.2f"), CurrentStress);
+    GEngine->AddOnScreenDebugMessage(-1, 0.0f, FColor::Blue, CurrentStressText);
+	
+	/*if (CurrentStress > RopeSnapThreshold)
+	{
+		TensionMeter = 0.0f;
+		DetachAndSlingshot();
+		return InVelocityXY; 
+	}*/
+
+	// Build tension for the slingshot reward based on maintained stress
+	TensionMeter = FMath::FInterpTo(TensionMeter, CurrentStress, DeltaTime, MaxTensionGainRate);
+
+	// 6. RESOLVE
+	FVector2D NewVelocity = (DirToAnchor * InwardSpeed) + (Tangent * TangentSpeed);
+	CurrentTravelYaw = FVector(NewVelocity.X, NewVelocity.Y, 0.0f).Rotation().Yaw;
+	//return FVector2D::ZeroVector;
+
+	return NewVelocity;
+}
+void UPhysicsController::UpdateVisualBoard()
+{
+	if (!BoardMesh || !PhysicsRoot) return;
+
+	// 1. READ TRUE STATE
+	float TargetYaw = PhysicsRoot->GetComponentVelocity().Rotation().Yaw - (CurrentLean * StdMaxYaw);
+    
+	// 2. APPLY ASSET HACKS (Fix your 3D model tonight so you can delete this garbage)
+	TargetYaw += 90.0f; 
+
+	// Pitch visually represents the physical lean calculated in UpdateKinematicIntent
+	float TargetPitch = CurrentLean * MaxVisualRoll;
+	float TargetRoll = 0.0f; 
+
+	FRotator TargetRot = FRotator(TargetPitch, TargetYaw, TargetRoll);
+	FRotator CurrentRot = BoardMesh->GetComponentRotation();
+	FRotator SmoothedRot = FMath::RInterpTo(CurrentRot, TargetRot, GetWorld()->GetDeltaSeconds(), RollInterpSpeed);
+    
+	BoardMesh->SetWorldRotation(SmoothedRot);
+}
+
+void UPhysicsController::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (!PhysicsRoot) return;
+	if (bResetingDrag)
+	{
+		CurrentForwardDrag = FMath::FInterpTo(PreResetForwardDrag, ComputedForwardDrag, DeltaTime, DragResetSpeed);
+		CurrentDragRatio = CurrentForwardDrag / ComputedForwardDrag;
+		if (CurrentForwardDrag == ComputedForwardDrag) bResetingDrag = false;
+	}
+	FVector CurrentVelocity = PhysicsRoot->GetComponentVelocity();
+	FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
+
+	
+	FVector2D VelocityXY = FVector2D(CurrentVelocity.X, CurrentVelocity.Y);
+	float DesiredZVelocity = HandleSuspensionNeed();
+
+	
+	UpdateKinematicIntent();
+
+	switch(CurrentState)
+	{
+		case EPhysicsState::FreeRide:
+			// TODO: Apply steering and base drag
+			{
+				VelocityXY = ProcessFreeCarving(DeltaTime, VelocityXY);
+				break;
+			}
+	            
+		case EPhysicsState::Tether_Carving:
+			// TODO: Enforce the circular constraint
+			{
+				VelocityXY = ProcessTetherCarving(DeltaTime, VelocityXY);
+				if (CurrentAnchor)
+				DrawDebugLine(GetWorld(), CurrentLoc, CurrentAnchor->GetActorLocation(), FColor::Green,
+					false, -1.0f, 0, 5.0f);
+				break;
+			}
+
+		case EPhysicsState::Overload:
+			// TODO: Stop player, play animation
+			{
+				break;
+			}
+	}
+	
+	FVector FinalVelocity = FVector(VelocityXY.X, VelocityXY.Y, DesiredZVelocity);
+	PhysicsRoot->SetPhysicsLinearVelocity(FinalVelocity);
+	UpdateVisualBoard();
+}
+void UPhysicsController::InitializeComponent(UPrimitiveComponent* InPhysicsRoot, UPrimitiveComponent* InBoardMesh)
+{
+	PhysicsRoot = InPhysicsRoot;
+	BoardMesh = InBoardMesh;
+}
+void UPhysicsController::SetSteeringInput(float RawInput)
+{
+	CurrentSteeringInput = RawInput;
+}
+void UPhysicsController::AttachToAnchor(AActor* AnchorActor)
+{
+	if (!bCanAttach) return;
+	CurrentAnchor = AnchorActor;
+	//CurrentState = EPhysicsState::Tether_Reeling;
+	bIsTetherActive = true;
+	FVector2D AnchorLocXY = FVector2D(CurrentAnchor->GetActorLocation().X, CurrentAnchor->GetActorLocation().Y);
+	FVector2D PlayerLocXY = FVector2D(PhysicsRoot->GetComponentLocation().X, PhysicsRoot->GetComponentLocation().Y);
+	CurrentRopeLength = FVector2D::Distance(AnchorLocXY, PlayerLocXY);
+	// Default to reeling so the system organically sorts itself out on the next frame based on input
+	CurrentState = EPhysicsState::Tether_Carving;
+	AttachedSpeed = PhysicsRoot->GetPhysicsLinearVelocity().Size();
+	TensionMeter = 0.0f;
+	EntrySpeed = PhysicsRoot->GetComponentVelocity().Size2D();
+	FVector2D EntryVel = FVector2D(PhysicsRoot->GetComponentVelocity().X, PhysicsRoot->GetComponentVelocity().Y);
+	FVector2D DirToAnchor = (AnchorLocXY - PlayerLocXY).GetSafeNormal();
+	// Prevent division by zero and establish a minimum stiffness floor 
+	// so players can't exploit standing still.
+	float SafeEntrySpeed = FMath::Max(EntrySpeed, 500.0f); 
+
+	// The Stiffness Multiplier scales based on how fast they entered compared to a theoretical "normal" speed.
+	// If normal speed is 3000, and they enter at 1500, stiffness is 0.5.
+	CurrentStiffnessMultiplier = SafeEntrySpeed / MaxTerminalVelocity;
+	float RawEntryAngle = FMath::RadiansToDegrees(FMath::Acos(FVector2D::DotProduct(EntryVel.GetSafeNormal(), DirToAnchor)));
+
+	// Which side of the anchor are they on? Get the sign.
+	FVector2D Tangent = FVector2D(-DirToAnchor.Y, DirToAnchor.X);
+	float EntrySign = FMath::Sign(FVector2D::DotProduct(EntryVel, Tangent));
+
+	// Hard-set the starting carve angle. No interp.
+	CurrentCarveAngle = FMath::Clamp(RawEntryAngle, 0.0f, 90.0f) * EntrySign;
+}
+void UPhysicsController::DetachAndSlingshot()
+{
+
+	if (!PhysicsRoot) return;
+    
+	CurrentAnchor = nullptr;
+	bIsTetherActive = false;
+	CurrentState = EPhysicsState::FreeRide;
+
+	/*// Convert Tension into a strict 0.0 to 1.0 multiplier
+	float CurrentTensionRatio = FMath::Clamp(TensionMeter / MaxTensionBoost, 0.0f, 1.0f);
+
+	// INHERIT TANGENTIAL MOMENTUM
+	// We launch them exactly in the direction they were already carving.
+	FVector CurrentVel = PhysicsRoot->GetPhysicsLinearVelocity();
+	FVector LaunchDirection = FVector(CurrentVel.X, CurrentVel.Y, 0.0f).GetSafeNormal(); 
+    
+	float CurrentSpeed = CurrentVel.Size2D();
+
+	// Reset your hacky drag system
+	CurrentDragRatio = 0;
+	CurrentForwardDrag = ComputedForwardDrag * 0;
+	CurrentLateralDrag = ComputedLateralDrag * 0;
+	PreResetForwardDrag = CurrentForwardDrag;
+	bResetingDrag = false;
+	bCanAttach = true;
+
+	// Apply the boost straight into the momentum vector. 
+	PhysicsRoot->SetPhysicsLinearVelocity(LaunchDirection * (CurrentSpeed + (CurrentTensionRatio * MaxSpeedBoost)));
+    
+	// Restart your drag timer
+	GetWorld()->GetTimerManager().SetTimer(DragTimer, this, &UPhysicsController::ResetDrag, FMath::Clamp(TimeAtMaxBoost * CurrentTensionRatio, 1.0f, TimeAtMaxBoost), false);
+    
+	// Wipe tension so they can't exploit it
+	TensionMeter = 0.0f;*/
+}
+void UPhysicsController::ResetDrag()
+{
+	bCanAttach = true;
+	bResetingDrag = true;
+}
+
+/*
+*void UPhysicsController::HandleSuspension()
 {
 	FVector CurrentVel = PhysicsRoot->GetComponentVelocity();
 	FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
@@ -41,7 +380,6 @@ void UPhysicsController::HandleSuspension()
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, FString::Printf(TEXT("Upward Spring Force: %.2f"), UpwardSpringForce));
 	}
 }
-
 void UPhysicsController::DetachAndSlingshot()
 {
 	if (!PhysicsRoot || !CurrentAnchor) return;
@@ -72,47 +410,75 @@ void UPhysicsController::AttachToAnchor(AActor* AnchorActor)
 
 void UPhysicsController::ApplyTetherForces()
 {
-	if (!CurrentAnchor || !PhysicsRoot) return;
 
 	FVector CurrentLoc = PhysicsRoot->GetComponentLocation();
-	FVector TargetLoc = CurrentAnchor->GetActorLocation();
-	TargetLoc.Z = 0.0f; 
-    
-	FVector Velocity = PhysicsRoot->GetComponentVelocity();
-	FVector DirToAnchor = (TargetLoc - CurrentLoc).GetSafeNormal();
-    
-	float Distance = FVector::Distance(CurrentLoc, TargetLoc);
-    if (Distance <= MinRopeLength) return;
-	// How fast are we currently moving directly toward the anchor?
-	float ApproachSpeed = FVector::DotProduct(Velocity, DirToAnchor);
 
-	// --- 1. THE WINCH PULL (The Boat) ---
-	// Calculate how far below our allowed pull speed we are
-	float PullSpeedDeficit = CurrentSpeedSoftCap - ApproachSpeed;
-    
-	if (PullSpeedDeficit > 0.0f)
+	if (CurrentAnchor && PhysicsRoot)
 	{
-		// TetherPullFactor determines how aggressively it yanks you up to the target speed
-		float PullForce = PullSpeedDeficit * FMath::Clamp(MaxTension * CurrentSpeedRatio, 5.0f, MaxTension);
-		PhysicsRoot->AddForce(DirToAnchor * PullForce, NAME_None, true);
-	}
+		CurrentTension = 0.0f; // Reset every frame
+		FVector TargetLoc = CurrentAnchor->GetActorLocation();
+		TargetLoc.Z = 0.0f;
+		float Distance = FVector::Distance(CurrentLoc, TargetLoc);
+		FVector DirToAnchor = (TargetLoc - CurrentLoc).GetSafeNormal();
+		float DistanceProgress = 0.0f;
+		if (InitialGrappleDistance > 10.0f)
+		{
+			DistanceProgress = 1.0f - FMath::Clamp(Distance / InitialGrappleDistance, 0.0f, 1.0f);
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString::Printf(TEXT("Distance Progress: %.2f"), DistanceProgress));
+		}
+		float RevMultiplier = 1.0f;
+		if (EngineDistancePowerCurve)
+		{
+			RevMultiplier = EngineDistancePowerCurve->GetFloatValue(DistanceProgress);
+		}
+		FVector Velocity = PhysicsRoot->GetComponentVelocity();
+		float TotalSpeed = Velocity.Size2D();
+		float ApproachSpeed = FVector::DotProduct(Velocity, DirToAnchor);
 
-	// --- 2. THE TAUT LINE (The Rope Limit) ---
-	// If the player carves hard and exceeds the initial rope length, 
-	// the rope acts as a rigid boundary and yanks them into a circular arc.
-	if (Distance > InitialGrappleDistance)
-	{
-		float StretchError = Distance - InitialGrappleDistance;
-        
-		// High stiffness (RigidRopeStiffness) and damping (RigidRopeDamping) 
-		// to prevent bungee bouncing when they hit the end of the rope.
-		float CorrectiveTension = (StretchError * BungeeStiffness) + (-ApproachSpeed * 100.0f);
-        
-		CorrectiveTension = FMath::Max(CorrectiveTension, 0.0f); 
-		PhysicsRoot->AddForce(DirToAnchor * CorrectiveTension, NAME_None, true);
+		float SpeedRatio = 0.0f;
+		if (CurrentSpeedSoftCap > 10.0f) // Safety check against divide-by-zero
+		{
+			SpeedRatio = TotalSpeed / CurrentSpeedSoftCap;
+		}
+		
+		float SpeedMultiplier = 1.0f; // Default to full power if curve is missing
+		if (EngineSpeedMultiplierCurve)
+		{
+			SpeedMultiplier = EngineSpeedMultiplierCurve->GetFloatValue(CurrentSpeedRatio);
+		}
+		
+		// --- 3. THE MAGIC ENGINE MATH ---
+		// Power = Base Speed * Distance Curve * Speed Curve
+		float CalculatedMotorSpeed = EngineReelSpeed * RevMultiplier * SpeedMultiplier;
+		// BaseSpeed guarantees the line stays taut
+		
+		float BaseSpeed = FMath::Max(MinimumTautSpeed, ApproachSpeed);
+		float DynamicReelSpeed = MinimumTautSpeed + CalculatedMotorSpeed;
+		FString DynamicReelSpeedText = FString::Printf(TEXT("DynamicReelSpeed: %.2f (ApproachSpeed: %.2f) | CalcMotorSpeed: %.2f"),
+			DynamicReelSpeed, ApproachSpeed, CalculatedMotorSpeed);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, DynamicReelSpeedText);
+		CurrentRestLength -= (DynamicReelSpeed * GetWorld()->GetDeltaSeconds());
+		CurrentRestLength = FMath::Max(CurrentRestLength, MinRopeLength);
+		
+		if (Distance > CurrentRestLength)
+		{
+			float k = FMath::Clamp(Distance - CurrentRestLength, 0.0f,
+			TensionCurve ? MaxTension * TensionCurve->GetFloatValue(CurrentSpeedRatio) : MaxTension);
+			FString KText = FString::Printf(TEXT("k: %.2f"), k);
+			//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, KText);
+			CurrentTension = BungeeStiffness * k;
+			FString TensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
+			float PullForce = CurrentTension;
+			FVector PullDir = (TargetLoc - CurrentLoc).GetSafeNormal();
+			FString PullForceText = FString::Printf(TEXT("PullForce: %.2f"), PullForce);
+			PhysicsRoot->AddForce(PullDir * PullForce, NAME_None, false);
+		}
+		
+		FString CurrentTensionText = FString::Printf(TEXT("Current Tension: %.2f"), CurrentTension);
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue, CurrentTensionText);
+		FColor RopeColor = CurrentTension > 500.0f ? FColor::Red : FColor::Green;
+		DrawDebugLine(GetWorld(), CurrentLoc, TargetLoc, RopeColor, false, -1.0f, 0, 5.0f);
 	}
-
-	DrawDebugLine(GetWorld(), CurrentLoc, TargetLoc, FColor::Green, false, -1.0f, 0, 5.0f);
 }
 
 void UPhysicsController::SetSteeringInput(float RawInput)
@@ -301,10 +667,26 @@ void UPhysicsController::InitializeComponent(UPrimitiveComponent* InPhysicsRoot,
 	BoardMesh = InBoardMesh;
 }
 
-void UPhysicsController::DisableTether()
+/*void UPhysicsController::DisableTether()
 {
 	CurrentAnchor = nullptr;
 	bIsTetherActive = false;
 	CurrentTension = 0.0f;
+}#1#*/
+
+void UPhysicsController::DisableTether()
+{
+	/*CurrentAnchor = nullptr;
+	bIsTetherActive = false;
+	CurrentTension = 0.0f;*/
 }
 
+void UPhysicsController::SetSkidInput(bool bIsPressed)
+{
+	bIsSkidding = bIsPressed;
+}
+
+void UPhysicsController::SetSprintInput(bool bIsPressed)
+{
+	bIsSprinting = bIsPressed;
+}

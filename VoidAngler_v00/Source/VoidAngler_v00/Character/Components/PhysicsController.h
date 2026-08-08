@@ -6,14 +6,144 @@
 #include "Components/ActorComponent.h"
 #include "PhysicsController.generated.h"
 
-
+UENUM(BlueprintType)
+enum class EPhysicsState : uint8
+{
+	FreeRide,       // Unattached, player controls steering freely
+	Tether_Carving, // Attached, line is taut, radius is clamped
+	Tether_Reeling, // Attached, pointing at anchor, line is shrinking
+	Overload        // Tension broke, player penalized
+};
 class AOceanManager;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class VOIDANGLER_V00_API UPhysicsController : public UActorComponent
 {
 	GENERATED_BODY()
+private:
+	EPhysicsState CurrentState = EPhysicsState::FreeRide;
+	UPROPERTY()
+	AActor* CurrentAnchor = nullptr;
+	float CurrentRopeLength = 0.0f;
+	float CurrentSteeringInput = 0.0f;
+	float TensionMeter;
+	float CurrentBoardYaw;
+	float ComputedForwardDrag;
+	float ComputedLateralDrag;
+	float CurrentForwardDrag;
+	float CurrentLateralDrag;
+	float AttachedSpeed = 0.0f;
+	FRotator CurrentBoardRot;
+	float EntrySpeed = 0.0f;
+	float CurrentStiffnessMultiplier = 1.0f;
+	FTimerHandle DragTimer;
+	float CurrentDragRatio = 1.0f;
+	bool bResetingDrag = false;
+	float PreResetForwardDrag = 0.0f;
+	bool bCanAttach = true;
+	float EdgeTiltRatio;
+	float LastActiveSteering;
+	float CurrentCarveAngle;
+	float CurrentTravelYaw;
+	float BoardHeadingYaw;
 
+protected:
+	
+	// Tether Pull Settings
+	UPROPERTY(EditAnywhere, Category = "Tether | Pull")
+	double MaxExpectedLateralDrag;
+	UPROPERTY(EditAnywhere, Category = "Tether | Pull")
+	float ReelAcceleration = 6000.0f;
+	// Turning Settings
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float MaxTurnRate = 90.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float MaxPitch = 30.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float AnchorYawRestoreSpeed = 45.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float CarveEfficiencyScalar;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float FreeEdgeBrakingFriction;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float FreeLateralGripStiffness;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float CarveEdgeBrakingFriction;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float CarveLateralGripStiffness;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float CarveAcceleration;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float MaxLateralMultiplier;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float LeaningBaseSpeed = 30.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float HydroDragCoefficient = 3.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float BaseWaterFriction = 0.3f;
+	UPROPERTY(EditAnywhere, Category = "Movement |Turning")
+	float RopeSnapThreshold;
+	
+	// Buoyancy Settings
+	UPROPERTY(EditAnywhere, Category = "Movement | Buoyancy")
+	float ZSnapResponsiveness = 15.0f; 
+	UPROPERTY(EditAnywhere, Category = "Movement | Buoyancy")
+	float RideHeightOffset = 50.0f;
+
+	// Tension Meter Settings
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float TensionLossRate;
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float MaxTensionGainRate;
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float MaxSpeedBoost = 1000.0f;
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float MaxTensionBoost = 125.0f;
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float TimeAtMaxBoost = 1.0f;
+	UPROPERTY(EditAnywhere, Category = "Tether | Tension")
+	float DragResetSpeed = 5.0f;
+	
+	UPROPERTY(EditAnywhere, Category = "Movement | Speed Control")
+	float MaxTerminalVelocity = 4000.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement | Speed Control")
+	float LateralGripRatio = 150.0f;
+	UPROPERTY(EditAnywhere, Category = "Movement | Speed Control")
+	float AbsoluteMaxCarveVelocity = 4000.0f;
+
+	// Buoyancy Functions
+	float HandleSuspensionNeed();
+	
+	// Steering Functions
+	void UpdateKinematicIntent();
+	FVector2D ProcessFreeCarving(float DeltaTime, FVector2d InVelocityXY);
+	void ResetDrag();
+	// Tethering Functions
+	FVector2D ProcessTetherCarving(float DeltaTime, FVector2d InVelocityXY);
+
+	// Visual Board Functions
+	void UpdateVisualBoard();
+
+public:
+		void SetSteeringInput(float RawInput);
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 public:	
 	UPhysicsController();
 	float CurrentSpeedSoftCap;
@@ -21,8 +151,8 @@ public:
 	void DetachAndSlingshot();
 	void AttachToAnchor(AActor* AnchorActor);
 	void ApplyTetherForces();
-	UFUNCTION(BlueprintCallable, Category = "Arcade Physics")
-	void SetSteeringInput(float RawInput);
+	/*UFUNCTION(BlueprintCallable, Category = "Arcade Physics")
+	void SetSteeringInput(float RawInput);*/
 	UFUNCTION(BlueprintCallable, Category = "Arcade Physics")
 	void SetSkidInput(bool bIsPressed);
 	UFUNCTION(BlueprintCallable, Category = "Arcade Physics")
@@ -173,8 +303,8 @@ private:
 	bool CanAttach = true;
 	UPROPERTY()
 	UPrimitiveComponent* PhysicsRoot;
-	UPROPERTY()
-	AActor* CurrentAnchor;
+	/*UPROPERTY()
+	AActor* CurrentAnchor;*/
 	UPROPERTY()
 	AOceanManager* OceanManager;
 	UPROPERTY()
